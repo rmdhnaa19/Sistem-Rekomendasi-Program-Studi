@@ -1,0 +1,48 @@
+/* SETIAP BUAT VIEW BARU HARAP COPAS CSS DIBAWAH INI KE BAWAHNYA DAN SESUAIKAN DENGAN ID TABLE */
+/* Mengatur lebar kolom pencarian */
+#table_transaksiPakan_filter input[type="search"] {
+    flex-grow: 2; /* Membuat input search mengisi sisa ruang yang tersedia */
+    margin-left: 10px;
+}
+
+#table_transaksiPakan_filter .input-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px; /* Jarak antar elemen */
+}
+
+#table_transaksiPakan_filter select,
+#table_transaksiPakan_filter button {
+    flex-grow: 0;
+    flex-shrink: 1;
+}
+
+#table_transaksiPakan_filter {
+    display: flex;
+    align-items: center;
+}
+
+/* Membuat layout responsif */
+@media (max-width: 768px) {
+    #table_transaksiPakan_filter .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #table_transaksiPakan_filter input[type="search"] {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    #table_transaksiPakan_filter select,
+    #table_transaksiPakan_filter button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .modal-dialog {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,64 @@
+html, body {
+    height: 100%; /* Pastikan html dan body memiliki tinggi 100% */
+    margin: 0;
+}
+
+.sidebar {
+    min-height: 100vh; /* Pastikan sidebar memiliki tinggi penuh sepanjang viewport */
+    position: fixed; /* Menjadikan sidebar tetap di sisi kiri */
+    top: 0;
+    left: 0;
+    width: 250px; /* Sesuaikan lebar sidebar */
+    padding: 0;
+    z-index: 1000; /* Pastikan sidebar berada di atas konten lainnya */
+    display: flex;
+    flex-direction: column; /* Mengatur elemen dalam sidebar secara vertikal */
+}
+
+.sidebar-header {
+    padding: 100px;
+    flex: 0 0 auto; /* Pastikan header tidak mempengaruhi ukuran sidebar */
+}
+
+.sidebar-header img {
+    display: block;
+    margin: 0 auto;
+}
+
+.sidebar-menu {
+    background-color: #00509E; /* Warna biru */
+    color: #ffffff; /* Warna putih untuk teks */
+    flex: 1 1 auto; /* Membuat menu mengisi sisa ruang di sidebar */
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu .menu .sidebar-item {
+    margin: 5px 0;
+}
+
+.sidebar-menu .menu .sidebar-item a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-menu .menu .sidebar-item a:hover,
+.sidebar-menu .menu .sidebar-item.active a {
+    background-color: #FFFFFF; /* Warna biru gelap saat aktif atau hover */
+}
+
+.sidebar-title {
+    color: #FFFFFF; /* Warna putih untuk judul */
+    font-size: 14px;
+    font-weight: bold;
+    margin: 15px 0 5px 15px;
+}
