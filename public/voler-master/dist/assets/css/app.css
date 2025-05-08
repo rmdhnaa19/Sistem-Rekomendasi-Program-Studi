@@ -1,4 +1,6 @@
-@import url(https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap);/**
+/* @import url(https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap);/** */
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
  * Voler
  *
  * Voler is a clean & modern HTML5 admin template based on Bootstrap 5
@@ -105,8 +107,13 @@
   color: #2178d1;
 }
 
+/* * {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+} */
+
+/* Import font dari Google Fonts (pastikan sudah ada di <head> HTML) */
 * {
-  font-family: "Raleway";
+  font-family: 'Poppins', sans-serif;
 }
 
 #app {
@@ -118,6 +125,10 @@
   background-color: #F7FAFF;
   min-height: 100vh;
   transition: margin-left 0.6s ease-out;
+  -webkit-transition: margin-left 0.6s ease-out;
+  -moz-transition: margin-left 0.6s ease-out;
+  -ms-transition: margin-left 0.6s ease-out;
+  -o-transition: margin-left 0.6s ease-out;
 }
 #main .main-content {
   padding: 2rem 1.5rem;

@@ -87,7 +87,7 @@
                     </div>              
                                     
                     <!-- Kolom Program Studi -->
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="form-group">
                             <label for="nama_prodi" class="form-label">Program Studi</label>
                             <select name="nama_prodi" class="form-control" required>
@@ -97,7 +97,23 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div> --}}
+
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id_prodi" class="form-label">Program Studi</label>
+                        <select class="choices form-select @error('id_prodi') is-invalid @enderror" name="id_prodi"
+                            id="id_prodi">
+                            <option value="{{ old('id_prodi') }}">- Pilih Program Studi -</option>
+                            @foreach ($prodi as $item)
+                                <option value="{{ $item->id_prodi }}">{{ $item->nama_prodi }}</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('id_prodi'))
+                            <span class="text-danger">{{ $errors->first('id_prodi') }}</span>
+                        @endif
                     </div>
+                </div>
 
                     <!-- Tombol Simpan & Kembali -->
                     <div class="d-flex justify-content-between">

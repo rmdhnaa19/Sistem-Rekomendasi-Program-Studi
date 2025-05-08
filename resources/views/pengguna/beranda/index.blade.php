@@ -1,40 +1,40 @@
 @extends('layouts.navbar')
-
 @section('content')
     <!-- Konten utama -->
-        <section class="hero" style="margin-top: 70px;">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <h1 class="fw-bold">
-                            {{ $profile->judul ?? 'Selamat Datang!' }}
-                        </h1>
-                        <p class="lead">
-                            {{ $profile->deskripsi ?? 'Temukan informasi lengkap seputar pendaftaran mahasiswa baru di Poliwangi.' }}
-                        </p>
-                        <a href="{{ route('pengguna.konsultasi.index') }}" class="btn btn-warning btn-lg fw-bold">
-                            Cek sekarang! 🔍
-                        </a>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            @php
-                            $youtubeUrl = $profile->youtube_link ?? 'https://youtu.be/gRHBOxMDKa0?si=2HzfHMfWOMOawjB3';
-                            $embedUrl = str_replace(['youtu.be/', 'watch?v='], ['www.youtube.com/embed/', 'embed/'], $youtubeUrl);
-                            @endphp
-                            <iframe class="embed-responsive-item" width="100%" height="350"
-                                src="{{ $embedUrl }}"
-                                title="YouTube video player" frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                                style="border-radius: 10px; overflow: hidden;">
-                            </iframe>
-                        </div>
+    <section class="hero pt-5 pb-5" >
+        <div class="container">
+            <div class="row align-items-center gy-5">
+                <!-- Teks -->
+                <div class="col-md-6">
+                    <h1 class="fw-bold fs-3 mb-3">
+                        {{ $profile->judul ?? 'Selamat Datang!' }}
+                    </h1>
+                    <p class="fs-6 mb-4 text-secondary">
+                        {{ $profile->deskripsi ?? 'Temukan informasi lengkap seputar pendaftaran mahasiswa baru di Poliwangi.' }}
+                    </p>
+                    <a href="{{ route('pengguna.konsultasi.index') }}" class="btn btn-warning btn-lg fw-bold style="background-color: #FDA702;" >
+                        Cek sekarang! 🔍
+                    </a>
+                </div>
+
+                <!-- Video -->
+                <div class="col-md-6 text-center">
+                    @php
+                        $youtubeUrl = $profile->youtube_link ?? 'https://youtu.be/gRHBOxMDKa0?si=2HzfHMfWOMOawjB3';
+                        $embedUrl = str_replace(['youtu.be/', 'watch?v='], ['www.youtube.com/embed/', 'embed/'], $youtubeUrl);
+                    @endphp
+                    <div class="ratio ratio-16x9" style="border-radius: 10px; overflow: hidden;">
+                        <iframe 
+                            src="{{ $embedUrl }}"
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </section>  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @endsection
+@endsection

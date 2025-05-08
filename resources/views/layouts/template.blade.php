@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PRISM | @yield('title')</title>
+    <link rel="stylesheet" href="https://cdn.jsdeliver.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="icon" href="{{ asset('storage/asset_web/logo-poliwangi.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.css" />
     <link rel="stylesheet"
         href="{{ asset('voler-master/dist/assets/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/app.css') }}">
-    <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon">
-    
+
     <!-- Load DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <!-- Include Choices CSS -->
@@ -27,32 +28,6 @@
     <link rel="stylesheet" href="{{ asset('css/pertanyaan_kecerdasan.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kriteria.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kasus_lama.css') }}"> 
-
-    {{-- <link rel="stylesheet" href="{{ asset('css/kelolaGudang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaPJGudang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaPakan.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaPakanGudang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiPakan.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/transaksiPakan.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaAlat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaAlatGudang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiAlat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/transaksiAlat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaObat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaObatGudang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kelolaTransaksiObat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/transaksiObat.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/manajemenKolam.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/manajemenTambak.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/faseKolam.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/pjTambak.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/anco.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kualitasAir.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/penanganan.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/sampling.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/pakanHarian.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kematianUdang.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/fasekolamuser.css') }}"> --}}
     @stack('css')
 </head>
 

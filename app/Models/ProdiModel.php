@@ -13,7 +13,7 @@ class ProdiModel extends Model
     protected $table = 'prodi';
     protected $primaryKey = 'id_prodi';
 
-    protected $fillable = ['nama_prodi', 'id_jurusan', 'akreditasi', 'jenjang', 'durasi_studi', 
+    protected $fillable = ['kd_prodi','nama_prodi', 'id_jurusan', 'akreditasi', 'jenjang', 'durasi_studi', 
     'tahun_berdiri', 'deskripsi', 'created_at', 'updated_at'];
 
     public function jurusan():BelongsTo{

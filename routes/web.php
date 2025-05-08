@@ -15,7 +15,9 @@ use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\SubKriteriaController;
 use App\Http\Controllers\KasusLamaController;
 use App\Http\Controllers\KasusBaruController;
+use App\Http\Controllers\ReviseController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\HasilController;
 use App\Http\Controllers\ProfileKampusController;
 
 use Illuminate\Support\Facades\Route;
@@ -32,9 +34,9 @@ Route::prefix('pengguna')->group(function () {
     Route::get('/tes', [TesController::class, 'index'])->name('pengguna.tes.index');
     Route::post('/tes', [TesController::class, 'store'])->name('tes.store');
     Route::post('/simpan-jawaban', [TesController::class, 'simpanJawaban'])->name('simpanJawaban');
-    Route::get('/hasil', function () {
-        return view('pengguna.konsultasi.hasil');
-    })->name('pengguna.konsultasi.hasil');
+    // Route::get('/hasil', function () { return view('pengguna.konsultasi.hasil');
+    // })->name('pengguna.konsultasi.hasil');
+    Route::get('/hasil', [HasilController::class, 'index'])->name('pengguna.konsultasi.hasil');
 });
 
 // Route Login dan Logout
@@ -146,6 +148,19 @@ Route::prefix('kasus_lama')->group(function() {
     Route::get('/{id}/edit', [KasusLamaController::class, 'edit'])->name('admin.kasus_lama.edit');
     Route::put('/{id}', [KasusLamaController::class, 'update'])->name('admin.kasus_lama.update');
     Route::delete('/{id}', [KasusLamaController::class, 'destroy'])->name('admin.kasus_lama.destroy');
+});
+
+// kelola kasus baru revise
+Route::prefix('revise')->group(function() {
+    Route::get('/', [ReviseController::class, 'index'])->name('admin.revise.index');
+    Route::post('/list', [ReviseController::class, 'list'])->name('admin.revise.list');
+    Route::get('/create', [ReviseController::class, 'create'])->name('admin.revise.create');
+    Route::post('/', [ReviseController::class, 'store'])->name('admin.revise.store');
+    Route::get('/{id}', [ReviseController::class, 'show'])->name('admin.revise.show');
+    Route::get('/{id}/edit', [ReviseController::class, 'edit'])->name('admin.revise.edit');
+    Route::post('/revise/{id}/approve', [ReviseController::class, 'approve'])->name('admin.revise.approve');
+    Route::put('/{id}', [ReviseController::class, 'update'])->name('admin.revise.update');
+    Route::delete('/{id}', [ReviseController::class, 'destroy'])->name('admin.revise.destroy');
 });
 
 // Kelola Halaman Dinamis

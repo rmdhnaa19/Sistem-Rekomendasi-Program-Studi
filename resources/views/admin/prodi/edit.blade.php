@@ -16,6 +16,16 @@
                     <div class=" form-group row">
                         
                             <div class="form-group">
+                                <label for="kd_kolam">Kode Prodi</label>
+                                <input type="number" name="kd_prodi" id="kd_prodi"
+                                    class="form-control @error('kd_prodi') is-invalid @enderror"
+                                    value="{{ old('kd_prodi', $prodi->kd_prodi) }}" required>
+                                @error('kd_prodi')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
                                 <label for="nama_prodi" class="form-label">Nama Program Studi</label>
                                 <input type="text" class="form-control @error('nama_prodi') is-invalid @enderror" id="nama_prodi"
                                     name="nama_prodi" value="{{ old('nama_prodi', $prodi->nama_prodi) }}" placeholder="Masukkan Nama Program Studi"

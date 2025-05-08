@@ -9,6 +9,20 @@
                 <div class="row">
 
                     <!-- Full Width Form -->
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="kd_prodi" class="form-label">Kode Prodi</label>
+                            <input type="number" class="form-control" id="kd_prodi" name="kd_prodi"
+                                placeholder="Masukkan kode program studi" value="{{ old('kd_prodi') }}" required autofocus>
+                            @error('kd_prodi')
+                            <div class="invalid-feedback">
+                                <i class="bx bx-radio-circle"></i>
+                                Kode prodi yang anda masukkan tidak valid
+                            </div>
+                            @enderror
+                        </div>
+
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="nama_prodi" class="form-label">Nama Prodi</label>

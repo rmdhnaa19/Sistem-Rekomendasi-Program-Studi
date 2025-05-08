@@ -23,14 +23,63 @@ class KasusLamaController extends Controller
             ]
         ];
         $activeMenu = 'kasus_lama';
-        return view('admin.kasus_lama.index', compact('breadcrumb', 'activeMenu'));
+    
+        // Mengambil data KasusLama dengan relasi
+        $kasusLama = KasusLamaModel::with(['prodi'])->get();
+    
+        return view('admin.kasus_lama.index', compact('breadcrumb', 'activeMenu', 'kasusLama'));
     }
 
     public function list(Request $request)
-    {
-        $kasus_lamas = KasusLamaModel::select('*');
-        return DataTables::of($kasus_lamas)->make(true);
+{
+    $kasus_lamas = KasusLamaModel::select(
+        'id_kasus_lama',
+        'kd_kasus_lama',
+        'nama',
+        'jurusan_asal',
+        'nilai_rata_rata_rapor',
+        'prestasi',
+        'organisasi',
+        'kec_linguistik',
+        'kec_musikal',
+        'kec_logika_matematis',
+        'kec_spasial',
+        'kec_kinestetik',
+        'kec_interpersonal',
+        'kec_intrapersonal',
+        'kec_naturalis',
+        'kec_eksistensial',
+        'id_prodi', 
+        'created_at', 
+        'updated_at'
+    )
+    ->with('prodi');
+
+    if ($request->id_prodi) {
+        $kasus_lamas->where('id_prodi', $request->id_prodi);
     }
+
+    return DataTables::of($kasus_lamas)
+        // Ganti kolom asli dengan kolom yang berisi nama_sub
+        ->editColumn('jurusan_asal', function ($row) {
+            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->jurusan_asal)->first();
+            return $subKriteria ? $subKriteria->nama_sub : '-';
+        })
+        ->editColumn('prestasi', function ($row) {
+            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->prestasi)->first();
+            return $subKriteria ? $subKriteria->nama_sub : '-';
+        })
+        ->editColumn('organisasi', function ($row) {
+            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->organisasi)->first();
+            return $subKriteria ? $subKriteria->nama_sub : '-';
+        })
+        ->addColumn('prodi_nama', function ($row) {
+            return $row->prodi ? $row->prodi->nama_prodi : '-';
+        })
+        ->rawColumns(['jurusan_asal', 'prestasi', 'organisasi', 'prodi_nama'])
+        ->make(true);
+}  
+
 
     public function create()
 {
@@ -83,13 +132,13 @@ class KasusLamaController extends Controller
             'kec_intrapersonal' => 'nullable|integer|min:0|max:7',
             'kec_naturalis' => 'nullable|integer|min:0|max:7',
             'kec_eksistensial' => 'nullable|integer|min:0|max:7',
-            'nama_prodi' => 'required|string',
+            'id_prodi' => 'required|integer',
         ]);
     
-        // Ganti id_sub_kriteria dengan nama asli sebelum menyimpan
-        $validatedData['jurusan_asal'] = SubKriteriaModel::where('id_sub_kriteria', $request->jurusan_asal)->value('nama_sub');
-        $validatedData['prestasi'] = SubKriteriaModel::where('id_sub_kriteria', $request->prestasi)->value('nama_sub');
-        $validatedData['organisasi'] = SubKriteriaModel::where('id_sub_kriteria', $request->organisasi)->value('nama_sub');
+        // Ganti id_sub_kriteria dengan nilai sebelum menyimpan
+        $validatedData['jurusan_asal'] = SubKriteriaModel::where('id_sub_kriteria', $request->jurusan_asal)->value('nilai');
+        $validatedData['prestasi'] = SubKriteriaModel::where('id_sub_kriteria', $request->prestasi)->value('nilai');
+        $validatedData['organisasi'] = SubKriteriaModel::where('id_sub_kriteria', $request->organisasi)->value('nilai');
 
         // Jika input kosong, set nilai ke 0
         $validatedData['kec_linguistik'] = $validatedData['kec_linguistik'] ?? 0;
@@ -108,7 +157,7 @@ class KasusLamaController extends Controller
         // Simpan ke database
         KasusLamaModel::create($validatedData);
     
-        Alert::toast('Data Kasus Lama berhasil ditambahkan dan sudah diindexing', 'success');
+        Alert::toast('Data Kasus Lama berhasil ditambahkan', 'success');
         return redirect()->route('admin.kasus_lama.index');
     }
     
@@ -126,48 +175,53 @@ public function show($id)
 }
 
 public function edit($id)
-    {
-        
-        $kasus_lama = KasusLamaModel::where('id_kasus_lama', $id)->first();
-        $kriteria = [
-            'jurusan_asal' => SubKriteriaModel::where('id_kriteria', 16)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
-            'Prestasi' => SubKriteriaModel::where('id_kriteria', 19)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
-            'Keaktifan Organisasi' => SubKriteriaModel::where('id_kriteria', 20)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
-        ];        
-        $sub_kriteria = SubKriteriaModel::all();
-        $list_prodi = ProdiModel::all();
-
-        if (!$kasus_lama) {
-            return redirect()->route('admin.kasus_lama.index')->with('error', 'Kasus lama tidak ditemukan');
-        }
-
-        $breadcrumb = (object) [
-            'title' => 'Edit Data Kasus Lama',
-            'paragraph' => 'Berikut ini merupakan form edit data kasus lama yang ada di dalam sistem',
-            'list' => [
-                ['label' => 'Home', 'url' => route('dashboard.index')],
-                ['label' => 'Kasus Lama', 'url' => route('admin.kasus_lama.index')],
-                ['label' => 'Edit'],
-            ]
-        ];
-
-        $activeMenu = 'kasus_lama';
-
-        return view('admin.kasus_lama.edit', compact('kasus_lama', 'list_prodi', 'sub_kriteria', 'kriteria', 'breadcrumb', 'activeMenu'));
-    }
-
-
-    public function update(Request $request, $id)
 {
-    // dd($request->all());
+    $kasus_lama = KasusLamaModel::where('id_kasus_lama', $id)->first();
+    
+    if (!$kasus_lama) {
+        return redirect()->route('admin.kasus_lama.index')->with('error', 'Kasus lama tidak ditemukan');
+    }
+    
+    // Ambil semua sub kriteria untuk dropdown
+    $sub_kriteria_jurusan = SubKriteriaModel::where('id_kriteria', 16)->get();
+    $sub_kriteria_prestasi = SubKriteriaModel::where('id_kriteria', 19)->get();
+    $sub_kriteria_organisasi = SubKriteriaModel::where('id_kriteria', 20)->get();
+    
+    $list_prodi = ProdiModel::all();
+
+    $breadcrumb = (object) [
+        'title' => 'Edit Data Kasus Lama',
+        'paragraph' => 'Berikut ini merupakan form edit data kasus lama yang ada di dalam sistem',
+        'list' => [
+            ['label' => 'Home', 'url' => route('dashboard.index')],
+            ['label' => 'Kasus Lama', 'url' => route('admin.kasus_lama.index')],
+            ['label' => 'Edit'],
+        ]
+    ];
+
+    $activeMenu = 'kasus_lama';
+
+    return view('admin.kasus_lama.edit', compact(
+        'kasus_lama', 
+        'list_prodi', 
+        'sub_kriteria_jurusan', 
+        'sub_kriteria_prestasi', 
+        'sub_kriteria_organisasi',
+        'breadcrumb', 
+        'activeMenu'
+    ));
+}
+
+public function update(Request $request, $id)
+{
     $kasus_lama = KasusLamaModel::where('id_kasus_lama', $id)->firstOrFail();
 
     $validatedData = $request->validate([
         'nama' => 'required|string|max:50',
-        'jurusan_asal' => 'required|string',
+        'jurusan_asal' => 'required', // Ini akan menerima ID sub kriteria
         'nilai_rata_rata_rapor' => 'required|numeric|min:0|max:100',
-        'prestasi' => 'required|string',
-        'organisasi' => 'required|string',
+        'prestasi' => 'required', // Ini akan menerima ID sub kriteria
+        'organisasi' => 'required', // Ini akan menerima ID sub kriteria
         'kec_linguistik' => 'required|integer|min:0',
         'kec_musikal' => 'required|integer|min:0',
         'kec_logika_matematis' => 'required|integer|min:0',
@@ -179,6 +233,9 @@ public function edit($id)
         'kec_eksistensial' => 'required|integer|min:0',
         'id_prodi' => 'required|integer'
     ]);
+
+    // Simpan ID langsung ke database, tidak perlu konversi
+    // ID sudah ada di request
 
     // Update data
     $kasus_lama->update($validatedData);

@@ -7,7 +7,7 @@
 
 {{-- Sidebar Header --}}
 <div class="sidebar-header">
-    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="sidebar-logo" />
+    <img src="{{ asset('images/pmb-poliwangi.png') }}" alt="Logo" class="sidebar-logo" style="margin-bottom: 3px" />
 </div>
 
         {{-- Menu Dashboard --}}
@@ -21,7 +21,8 @@
         <li class='sidebar-title'>MANAJEMEN USER</li>
         <li class="sidebar-item {{ $activeMenu == 'kelolaUser' ? 'active' : '' }}">
             <a href="{{ url('/user') }}" class='sidebar-link'>
-                <x-svg-icon icon="user" />
+                <i class="bi bi-grid text-muted"></i>
+                {{-- <x-svg-icon icon="user" /> --}}
                 <span>Kelola User</span>
             </a>
         </li>
@@ -89,7 +90,13 @@
         <li class="sidebar-item {{ $activeMenu == 'kasus_lama' ? 'active' : '' }}">
             <a href="{{ url('/kasus_lama') }}" class='sidebar-link'>
                 <x-svg-icon icon="user" />
-                <span>Kelola Basis Kasus</span>
+                <span>Kelola Kasus Lama</span>
+            </a>
+        </li>
+        <li class="sidebar-item {{ $activeMenu == 'revise' ? 'active' : '' }}">
+            <a href="{{ url('/revise') }}" class='sidebar-link'>
+                <x-svg-icon icon="user" />
+                <span>Kelola Revise</span>
             </a>
         </li>
         {{-- <li class="sidebar-item {{ $activeMenu == 'kelolaHasilRekomendasi' ? 'active' : '' }}">

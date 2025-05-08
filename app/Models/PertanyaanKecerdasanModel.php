@@ -16,10 +16,6 @@ class PertanyaanKecerdasanModel extends Model
     protected $fillable = ['pertanyaan', 'id_kecerdasan_majemuk', 'created_at', 'updated_at'];
 
     public function kecerdasan_majemuk():BelongsTo{
-        return $this->belongsTo(KecerdasanMajemukModel::class, 'id_kecerdasan_majemuk', 'id_kecerdasan_majemuk');
-}
-public function jawabanKecerdasan()
-{
-    return $this->hasMany(JawabanKecerdasan::class, 'id_pertanyaan_kecerdasan', 'id_pertanyaan_kecerdasan');
+        return $this->belongsTo(KecerdasanMajemukModel::class, 'id_kecerdasan_majemuk');
 }
 }

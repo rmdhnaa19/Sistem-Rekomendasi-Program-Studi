@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRISM | Harap Login Kembali</title>
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    {{-- <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon"> --}}
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/app.css') }}">
 </head>
 
@@ -18,8 +18,8 @@
                     <div class="card py-4">
                         <div class="card-body">
                             <div class="text-center mb-5">
-                                {{-- <img src="{{ asset('storage/asset_web/Logo Fluks w Text.png') }}" height="48"
-                                    class='mb-4'> --}}
+                                <img src="{{ asset('storage/asset_web/logo-poliwangi.png') }}" height="48"
+                                    class='mb-4'>
                                 <h3>Harap Login Kembali</h3>
                                 <p>Profil pengguna berhasil diperbarui</p>
                             </div>

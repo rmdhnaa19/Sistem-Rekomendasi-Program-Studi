@@ -13,5 +13,5 @@ class ProfileKampusModel extends Model
     protected $table = 'profile_kampus';
     protected $primaryKey = 'id_profile_kampus';
 
-    protected $fillable = ['logo', 'judul', 'deskripsi', 'youtube_link'];
+    protected $fillable = ['logo_kampus', 'logo_pmb', 'judul', 'deskripsi', 'youtube_link'];
 }

@@ -10,7 +10,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 120px 20px 5px;
+        padding: 120px 100px 5px;
         background-color: white;
     }
 
@@ -19,7 +19,7 @@
         padding: 40px;
         border-radius: 10px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        max-width: 700px;
+        max-width: 550px;
         width: 100%;
         /* margin-bottom: 20px; */
     }
@@ -48,7 +48,7 @@
         padding: 15px;
         font-size: 18px;
         font-weight: bold;
-        background-color: #e3a33b;
+        background-color: #FDA702;
         border: none;
         border-radius: 5px;
         transition: 0.3s ease-in-out;
@@ -56,8 +56,8 @@
 
     .btn-primary:hover {
         background-color: white;
-        color: #e3a33b;
-        border: 2px solid #e3a33b;
+        color: #FDA702;
+        border: 2px solid #FDA702;
     }
 
     .error-message {

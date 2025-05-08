@@ -29,7 +29,7 @@ class ProdiController extends Controller
 
     public function list(Request $request)
     {
-        $prodis = ProdiModel::select('id_prodi', 'nama_prodi', 'id_jurusan', 'akreditasi', 'jenjang', 'durasi_studi', 'deskripsi', 'created_at', 'updated_at')->with('jurusan'); 
+        $prodis = ProdiModel::select('id_prodi', 'kd_prodi', 'nama_prodi', 'id_jurusan', 'akreditasi', 'jenjang', 'durasi_studi', 'deskripsi', 'created_at', 'updated_at')->with('jurusan'); 
         if ($request->id_jurusan) {
             $prodis->where('id_jurusan', $request->id_jurusan);
         }
@@ -56,6 +56,7 @@ class ProdiController extends Controller
     public function store(Request $request)
     { 
         $validatedData = $request->validate([
+            'kd_prodi' => 'required|string|unique:prodi,kd_prodi',
             'nama_prodi'=> 'required|string|unique:prodi,nama_prodi',
             'id_jurusan'=> 'required|integer',
             'akreditasi'=> 'required|string',
@@ -110,6 +111,7 @@ class ProdiController extends Controller
     public function update(Request $request, string $id) {
     
         $request->validate([
+            'kd_prodi' => 'required|string|unique:prodi,kd_prodi,' . $id . ',id_prodi',
             'nama_prodi'=> 'required|string|unique:prodi,nama_prodi,' . $id . ',id_prodi',
             'id_jurusan'=> 'required|integer',
             'akreditasi'=> 'required|string',
@@ -118,8 +120,10 @@ class ProdiController extends Controller
             'deskripsi'=> 'required|string',
     ]);
 
-    $prodi = ProdiModel::find($id);
+    $prodi = ProdiModel::findOrFail($id); 
+
         $prodi->update([
+            'kd_prodi' => $request->kd_prodi,
             'nama_prodi'=> $request->nama_prodi,
             'id_jurusan'=> $request->id_jurusan,
             'akreditasi'=> $request->akreditasi,

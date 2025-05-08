@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in Sirekom</title>
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
-    {{-- <link rel="shortcut icon" href="{{ asset('storage/asset_web/Logo Fluks Baru BG wth.png') }}" type="image/x-icon"> --}}
+    <link rel="shortcut icon" href="{{ asset('storage/asset_web/logo-poliwangi.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/app.css') }}">
 </head>
 
@@ -19,7 +19,7 @@
                     <div class="card pt-4">
                         <div class="card-body">
                             <div class="text-center mb-5">
-                                <img src="{{ asset('storage/asset_web/logoprism.jpg') }}" height="50" class='mb-4'>
+                                <img src="{{ asset('storage/asset_web/pmb-poliwangi.png') }}" height="50" class='mb-4'>
                                 <h3>Sign In</h3>
                                 <p>Sign In untuk Mengakses Sirekom</p>
                             </div>

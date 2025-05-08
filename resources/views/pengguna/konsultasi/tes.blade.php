@@ -1,13 +1,53 @@
 @extends('layouts.navbar')
 @section('content')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    
     <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+    }
+
     .table {
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dataTables_paginate {
+        display: flex;
+        justify-content: center;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        justify-content: center !important;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .dataTables_paginate .paginate_button {
+        padding: 8px 15px !important;
+        border-radius: 100px;
+        background-color: #007bff;
+        color: white !important;
+        font-weight: bold;
+        transition: all 0.3s;
+        margin: 0 5px;
+        margin-top: 20px;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: #0056b3 !important;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        background-color: #d6d6d6 !important;
+        color: #888 !important;
+        cursor: not-allowed;
     }
 
     .table thead {
@@ -24,69 +64,31 @@
         border: 1px solid #dee2e6;
     }
 
-    .pagination-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-        
-    }
-
-    .pagination-buttons button {
-        padding: 10px 20px;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .pagination-buttons button:hover {
-        opacity: 0.8;
-    }
-
-    .warning-message {
-        color: red;
-        font-size: 14px;
-        display: none;
-    }
     .question-row.warning {
         background-color: #ffcccc !important;
     }
 
-    .btn-prev {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .btn-next {
-        background-color: #007bff;
-        color: white;
-    }
-
     .btn-choose {
+        font-size: 16px;
         background-color: white;
         color: black;
-        transition: all 0.3s ease;
         border: 2px solid;
+        transition: all 0.3s ease;
+        margin: 3px;
     }
 
     .btn-choose[data-value="1"] {
-        border-color: #28a745; /* Border hijau untuk Ya */
+        border-color: #28a745;
     }
 
     .btn-choose[data-value="0"] {
-        border-color: #dc3545; /* Border merah untuk Tidak */
+        border-color: #dc3545;
     }
 
     .btn-choose.selected-yes {
         background-color: #28a745 !important;
         color: white !important;
         border-color: #28a745 !important;
-    }
-    
-    .btn-choose:hover {
-        background-color: #b7b7b7!important;
-        color: white !important;
-        border: none !important;
     }
 
     .btn-choose.selected-no {
@@ -97,9 +99,9 @@
 
     .warning {
         border: 2px solid red;
-        background-color: #ffebee; 
+        background-color: #ffebee;
     }
-    
+
     .warning-message {
         color: red;
         font-size: 12px;
@@ -107,27 +109,40 @@
         margin-top: 5px;
     }
 
-    .pagination-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
     .btn-submit {
         background-color: #28a745;
         color: white;
     }
+
+    @media (max-width: 768px) {
+        .btn-choose {
+            font-size: 0;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+
+        .btn-choose[data-value="1"]::before {
+            content: '✅';
+            font-size: 18px;
+            display: inline-block;
+        }
+
+        .btn-choose[data-value="0"]::before {
+            content: '❌';
+            font-size: 18px;
+            display: inline-block;
+        }
+    }
     </style>
-</head>
-<body>
-    <div class="container mt-5 pt-5">
+
+    <div class="container pt-5">
         <h2 class="text-center">TES KECERDASAN</h2>
         <p class="text-center text-muted">Silakan pilih pernyataan yang sesuai dengan diri Anda.</p>
 
         <form action="{{ route('tes.store') }}" method="POST" id="tesForm">
             @csrf
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered" id="dataTable">
                 <thead>
                     <tr>
                         <th width="10%" class="text-center">NO.</th>
@@ -138,12 +153,12 @@
                 <tbody>
                     @foreach ($pertanyaan_kecerdasan as $index => $pertanyaan)
                     <tr class="question-row" data-id="{{ $pertanyaan->id }}">
-                        <td class="text-center">{{ $pertanyaan_kecerdasan->firstItem() + $index }}</td>
+                        <td class="text-center">{{ $index+1 }}</td>
                         <td>{{ $pertanyaan->pertanyaan }}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-choose" data-value="1">Ya</button>
-                            <button type="button" class="btn btn-choose" data-value="0">Tidak</button>
-                            <input type="hidden" name="jawaban[{{ $pertanyaan->id }}]" class="jawaban-input">
+                            <button type="button" class="btn btn-choose" data-value="1" value="1">Ya</button>
+                            <button type="button" class="btn btn-choose" data-value="0" value="0">Tidak</button>
+                            <input type="hidden" name="jawaban[{{ $pertanyaan->id_pertanyaan_kecerdasan }}]" class="jawaban-input">
                             <div class="warning-message">* Harap pilih salah satu</div>
                         </td>
                     </tr>
@@ -151,96 +166,89 @@
                 </tbody>
             </table>
 
-            <div class="d-flex justify-content-center gap-3">
-                @if ($pertanyaan_kecerdasan->previousPageUrl())
-                    <a href="{{ $pertanyaan_kecerdasan->previousPageUrl() }}" class="btn btn-secondary">Sebelumnya</a>
-                @endif
-                @if ($pertanyaan_kecerdasan->hasMorePages())
-                    <a href="{{ $pertanyaan_kecerdasan->nextPageUrl() }}" class="btn btn-primary">Selanjutnya</a>
-                @else
-                    <button type="submit" class="btn btn-success">Submit</button>
-                @endif
+            <div class="d-flex justify-content-center gap-3 btn-submit-wrapper">
+                <button type="submit" class="btn btn-success mt-4 mb-4" id="btn-submit">Submit</button>
             </div>
         </form>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let kecerdasanData = {}; // Objek untuk menyimpan jawaban berdasarkan jenis kecerdasan
-    
-            // Event listener untuk tombol pilihan Ya/Tidak
-            document.querySelectorAll(".btn-choose").forEach(button => {
-                button.addEventListener("click", function() {
-                    let row = this.closest("tr"); // Baris saat ini
-                    let buttons = row.querySelectorAll(".btn-choose"); // Semua tombol dalam baris
-                    let hiddenInput = row.querySelector(".jawaban-input"); // Input tersembunyi
-                    let warning = row.querySelector(".warning-message"); // Peringatan
-                    let questionId = row.dataset.id;
-                    let kecerdasanId = row.dataset.kecerdasan; // Ambil ID kecerdasan
-                    let pertanyaanText = row.querySelector("td:nth-child(2)").innerText;
-    
-                    // Reset tombol lain di baris ini
-                    buttons.forEach(btn => {
-                        btn.classList.remove("selected-yes", "selected-no");
-                    });
-    
-                    // Tandai tombol yang dipilih & isi nilai input tersembunyi
-                    if (this.dataset.value == "1") {
-                        this.classList.add("selected-yes");
-                        hiddenInput.value = "1";
-    
-                        // Tambahkan ke daftar jawaban berdasarkan kecerdasan
-                        if (!kecerdasanData[kecerdasanId]) {
-                            kecerdasanData[kecerdasanId] = [];
-                        }
-                        kecerdasanData[kecerdasanId].push(pertanyaanText);
-                    } else {
-                        this.classList.add("selected-no");
-                        hiddenInput.value = "0";
-    
-                        // Hapus jika sebelumnya ada di daftar
-                        if (kecerdasanData[kecerdasanId]) {
-                            kecerdasanData[kecerdasanId] = kecerdasanData[kecerdasanId].filter(q => q !== pertanyaanText);
-                        }
-                    }
-    
-                    // Hilangkan peringatan jika pengguna sudah memilih
-                    row.classList.remove("warning");
-                    warning.style.display = "none";
-                });
-            });
-    
-            // Fungsi validasi sebelum tombol "Selanjutnya" ditekan
-            function validateForm(event) {
-                let isValid = true;
-    
-                document.querySelectorAll(".question-row").forEach(row => {
-                    let hiddenInput = row.querySelector(".jawaban-input");
-                    let warning = row.querySelector(".warning-message");
-    
-                    if (!hiddenInput.value) {
-                        isValid = false;
-                        row.classList.add("warning"); // Tambahkan highlight merah
-                        warning.style.display = "block"; // Tampilkan peringatan
-                    }
-                });
-    
-                if (!isValid) {
-                    event.preventDefault(); 
+    $(document).ready(function() {
+        let table = $('#dataTable').DataTable({
+            searching: false,
+            lengthChange: false,
+            info: false,
+            pagingType: "simple",
+            ordering: false,
+            drawCallback: function(settings) {
+                let api = this.api();
+                let pageInfo = api.page.info();
+                if (pageInfo.page === pageInfo.pages - 1) {
+                    $('#btn-submit').show();
+                    $('.dataTables_paginate').hide(); // Sembunyikan pagination
+                    table.page.len(-1).draw();
+
+                    setTimeout(() => {
+                        $('html, body').animate({ scrollTop: $(document).height() }, 'fast');
+                    }, 100);
+                } else {
+                    $('#btn-submit').hide();
+                    $('.dataTables_paginate').show(); // Tampilkan pagination lagi
+                }
+            },
+            "language": {
+                "paginate": {
+                    "previous": "<i class='bi bi-arrow-left-circle'></i> Sebelumnya",
+                    "next": "Selanjutnya <i class='bi bi-arrow-right-circle'></i>"
                 }
             }
-    
-            // Event listener untuk tombol "Selanjutnya"
-            document.querySelector(".btn-primary").addEventListener("click", validateForm);
-    
-            // Saat submit, tambahkan kecerdasanData ke input hidden untuk dikirim ke backend
-            document.querySelector("#tesForm").addEventListener("submit", function() {
-                let inputHidden = document.createElement("input");
-                inputHidden.type = "hidden";
-                inputHidden.name = "hasil_kecerdasan";
-                inputHidden.value = JSON.stringify(kecerdasanData);
-                this.appendChild(inputHidden);
+        });
+        $('#btn-submit').hide();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".btn-choose").forEach(button => {
+            button.addEventListener("click", function() {
+                let row = this.closest("tr");
+                let buttons = row.querySelectorAll(".btn-choose");
+                let hiddenInput = row.querySelector(".jawaban-input");
+                let warning = row.querySelector(".warning-message");
+
+                buttons.forEach(btn => {
+                    btn.classList.remove("selected-yes", "selected-no");
+                });
+
+                if (this.dataset.value == "1") {
+                    this.classList.add("selected-yes");
+                    hiddenInput.value = "1";
+                } else {
+                    this.classList.add("selected-no");
+                    hiddenInput.value = "0";
+                }
+
+                row.classList.remove("warning");
+                warning.style.display = "none";
             });
         });
+
+        document.querySelector("#btn-submit").addEventListener("click", function(event) {
+            let isValid = true;
+            document.querySelectorAll(".question-row").forEach(row => {
+                let hiddenInput = row.querySelector(".jawaban-input");
+                let warning = row.querySelector(".warning-message");
+
+                if (!hiddenInput.value) {
+                    isValid = false;
+                    row.classList.add("warning");
+                    warning.style.display = "block";
+                }
+            });
+
+            if (!isValid) {
+                event.preventDefault();
+                alert("Harap jawab semua pertanyaan sebelum mengirim.");
+            }
+        });
+    });
     </script>
-    
+@endsection

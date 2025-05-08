@@ -7,62 +7,38 @@
             <div class="table-responsive">
                 <table class="table" id="table_prodi">
                     <thead>
-                        <tr class="text-center">
-                            <th>NAMA PRODI</th>
-                            <th>JURUSAN</th>
-                            <th>AKREDITASI</th>
-                            <th>JENJANG</th>
+                        <tr>
+                            <th class="text-center">KODE PRODI</th>
+                            <th class="text-center">NAMA PRODI</th>
+                            <th class="text-center">JURUSAN</th>
+                            <th class="text-center">AKREDITASI</th>
+                            <th class="text-center">JENJANG</th>
+                            <th class="text-center">DURASI STUDI</th>
+                            <th class="text-center">DESKRIPSI</th>
+                            <th class="text-center">AKSI</th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
     </div>
-
-    {{-- Modal --}}
-    <div class="modal fade text-left" id="prodiDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content" style="border-radius: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title white">Detail Program Studi</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i data-feather="x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="prodi-detail-content" class="container-fluid">
-                        <div class="text-center mb-3">
-                            <h4 class="mb-4"></h4>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div style="max-height: 30vh; overflow-y: auto;">
-                                    <p><strong>Nama Program Studi :</strong> <span id="prodi-nama_prodi"></span></p>
-                                    <p><strong>Jurusan :</strong> <span id="prodi-jurusan"></span></p>
-                                    <p><strong>Akreditasi :</strong> <span id="prodi-akreditasi"></span></p>
-                                    <p><strong>Jenjang :</strong> <span id="prodi-jenjang"></span></p>
-                                    <p><strong>Durasi Studi :</strong> <span id="prodi-durasi_studi"></span></p>
-                                    <p><strong>Deskripsi :</strong> <span id="prodi-deskripsi"></span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div class="modal-footer" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-                <button type="button" class="btn btn-danger" id="btn-delete-prodi">Hapus</button>
-                <button type="button" class="btn btn-primary" id="btn-edit-prodi">Edit</button>
-            </div>     
-        </div>
-    </div>
-    </div>
 @endsection
 @push('css')
+<style>
+    .aksi-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 5px; /* Jarak antara tombol */
+    }
+    .btn-xs {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>
 @endpush
 @push('js')
     <script>
     $(document).ready(function() {
-        var currentProdiId = null; // Variabel global untuk menyimpan ID prodi saat ini
-
         var dataProdi = $('#table_prodi').DataTable({
             serverSide: true,
             ajax: {
@@ -70,27 +46,43 @@
                 "dataType": "json",
                 "type": "POST",
                 "data": function(d) {
-                    d.id_jurusan = $('#id_jurusan').val();
+                    d.id_prodi = $('#id_prodi').val();
                 },
                 "error": function(xhr, error, thrown) {
                     console.error('Error fetching data: ', thrown);
                 }
             },
             columns: [
-                {
-                    data: "nama_prodi",
-                    render: function(data, type, row) {
-                        var url = '{{ route('admin.prodi.show', ':id') }}';
-                        url = url.replace(':id', row.id_prodi);
-                        return '<a href="javascript:void(0);" data-id="' + row.id_prodi +
-                            '" class="view-prodi-details" data-url="' + url +
-                            '" data-toggle="modal" data-target="#prodiDetailModal">' + data + '</a>';
-                    }
-                },
+                { data: "kd_prodi" },
+                { data: "nama_prodi" },
                 { data: "jurusan.nama_jurusan" },
                 { data: "akreditasi" },
                 { data: "jenjang" },
-            ],
+                { data: "durasi_studi" },
+                { 
+        data: "deskripsi",
+        render: function(data, type, row) {
+            return `<div class="text-justify" style="text-align: justify;">${data}</div>`;
+        }
+    },
+                {
+                    data: "id_prodi",
+                    render: function(data, type, row) {
+                        var editUrl = '{{ route('admin.prodi.edit', ':id') }}'.replace(':id', data);
+                        var deleteUrl = '{{ route('admin.prodi.destroy', ':id') }}'.replace(':id', data);
+                        return `
+                <div class="aksi-buttons">
+                    <a href="${editUrl}" class="btn btn-primary btn-xs">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <button class="btn btn-danger btn-xs btn-delete-prodi" data-id="${data}" data-url="${deleteUrl}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        }
+    }
+],
             pagingType: "simple_numbers",
             dom: 'frtip',
             language: {
@@ -98,41 +90,8 @@
             }
         });
 
-        // Event listener untuk menampilkan detail prodi
-        $(document).on('click', '.view-prodi-details', function() {
-            var url = $(this).data('url');
-            currentProdiId = $(this).data('id'); // Simpan ID prodi saat ini
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function(response) {
-                    if (response.html) {
-                        $('#prodi-detail-content').html(response.html);
-                        $('#prodiDetailModal').modal('show');
-                    } else {
-                        alert('Gagal memuat detail program studi');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
-                    alert('Gagal memuat detail program studi');
-                }
-            });
-        });
-
-        // Tombol Edit
-        $(document).on('click', '#btn-edit-prodi', function() {
-            if (currentProdiId) {
-                const editUrl = '{{ route('admin.prodi.edit', ':id') }}'.replace(':id', currentProdiId);
-                window.location.href = editUrl; // Redirect ke halaman edit
-            } else {
-                alert('ID program studi tidak ditemukan');
-            }
-        });
-
-        // Delete button
-    $(document).on('click', '#btn-delete-prodi', function() {
-        if (currentProdiId) {
+        $(document).on('click', '.btn-delete-prodi', function() {
+            var prodiId = $(this).data('id');
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: 'Data Program Studi ini akan dihapus secara permanen!',
@@ -144,10 +103,9 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var deleteUrl = '{{ route('admin.prodi.destroy', ':id') }}'
-                        .replace(':id', currentProdiId);
                     $.ajax({
-                        url: deleteUrl,
+                        // url: '{{ url('prodi/destroy') }}/' + prodiId,
+                        url: '{{ route('admin.prodi.destroy', ':id') }}'.replace(':id', prodiId),
                         type: 'POST',
                         data: {
                             "_token": "{{ csrf_token() }}",
@@ -155,41 +113,19 @@
                         },
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    timer: 2000,
-                                    showConfirmButton: true
-                                }).then(() => {
-                                    window.location.href = "{{ route('admin.prodi.index') }}";
-                                });
+                                Swal.fire('Berhasil!', response.message, 'success');
+                                dataProdi.ajax.reload();
                             } else {
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: response.message,
-                                    icon: 'error'
-                                });
+                                Swal.fire('Gagal!', response.message, 'error');
                             }
                         },
                         error: function(xhr) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Terjadi kesalahan saat menghapus data.',
-                                icon: 'error'
-                            });
+                            Swal.fire('Error!', 'Terjadi kesalahan saat menghapus data.', 'error');
                         }
                     });
                 }
             });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'ID program studi tidak ditemukan',
-                icon: 'error'
-            });
-        }
-    });
+        });
 
         // Tambahkan tombol "Tambah" setelah kolom pencarian
         $("#table_prodi_filter").append(

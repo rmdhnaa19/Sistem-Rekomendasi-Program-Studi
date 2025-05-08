@@ -29,31 +29,29 @@ class KasusLamaModel extends Model
         'kec_intrapersonal',
         'kec_naturalis',
         'kec_eksistensial',
-        'nama_prodi',
+        'id_prodi',
     ];
 
-    // Relasi ke Kriteria (Jurusan Asal)
     public function jurusan()
     {
-        return $this->belongsTo(KriteriaModel::class, 'jurusan_asal', 'id_kriteria');
+        return $this->belongsTo(SubKriteriaModel::class, 'jurusan_asal', 'id_sub_kriteria');
     }
-
-    // Relasi ke Kriteria (Prestasi)
+    
     public function prestasi()
     {
-        return $this->belongsTo(KriteriaModel::class, 'prestasi', 'id_kriteria');
+        return $this->belongsTo(SubKriteriaModel::class, 'prestasi', 'id_sub_kriteria');
     }
-
-    // Relasi ke Kriteria (Organisasi)
+    
     public function organisasi()
     {
-        return $this->belongsTo(KriteriaModel::class, 'organisasi', 'id_kriteria');
+        return $this->belongsTo(SubKriteriaModel::class, 'organisasi', 'id_sub_kriteria');
     }
+    
 
     // Relasi ke Prodi (Pastikan bahwa `nama_prodi` menyimpan `id_prodi`, bukan nama)
     public function prodi()
     {
-        return $this->belongsTo(ProdiModel::class, 'nama_prodi', 'id_prodi');
+        return $this->belongsTo(ProdiModel::class, 'id_prodi', 'id_prodi');
     }
 
     /**
