@@ -34,41 +34,86 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="form-group">
                             <label for="jurusan_asal" class="form-label">Jurusan Asal</label>
                             <select name="jurusan_asal" class="form-control" required>
                                 <option value="">-- Pilih Jurusan Asal --</option>
-                                @foreach($sub_kriteria_jurusan as $sub)
-                                    <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                                @foreach($jurusan_asal as $jurusan)
+                                    <option value="{{ $jurusan->id }}">{{ $jurusan->nama }}</option>
                                 @endforeach
-                            </select>                            
+                            </select>                        
                         </div>
+                    </div> --}}
+
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id_jurusan_asal" class="form-label">Jurusan Asal</label>
+                        <select class="choices form-select @error('id_jurusan_asal') is-invalid @enderror" name="id_jurusan_asal"
+                            id="id_jurusan_asal">
+                            <option value="{{ old('id_jurusan_asal') }}">- Pilih Jurusan Asal -</option>
+                            @foreach ($jurusan_asal as $item)
+                                <option value="{{ $item->id_jurusan_asal }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('id_jurusan_asal'))
+                            <span class="text-danger">{{ $errors->first('id_jurusan_asal') }}</span>
+                        @endif
                     </div>
                     
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="form-group">
                             <label for="prestasi" class="form-label">Prestasi</label>
                             <select name="prestasi" class="form-control" required>
                                 <option value="">-- Pilih Prestasi --</option>
-                                @foreach($sub_kriteria_prestasi as $sub)
-                                    <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                                @foreach($prestasi as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
+                    </div> --}}
+
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id_prestasi" class="form-label">Prestasi</label>
+                        <select class="choices form-select @error('id_prestasi') is-invalid @enderror" name="id_prestasi"
+                            id="id_prestasi">
+                            <option value="{{ old('id_prestasi') }}">- Pilih Prestasi -</option>
+                            @foreach ($prestasi as $item)
+                                <option value="{{ $item->id_prestasi }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('id_prestasi'))
+                            <span class="text-danger">{{ $errors->first('id_prestasi') }}</span>
+                        @endif
                     </div>
                     
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="form-group">
                             <label for="organisasi" class="form-label">Organisasi</label>
                             <select name="organisasi" class="form-control" required>
                                 <option value="">-- Pilih Organisasi --</option>
-                                @foreach($sub_kriteria_organisasi as $sub)
-                                    <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                                @foreach($organisasi as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>       
+                    </div> --}}
+                    
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id_organisasi" class="form-label">Organisasi</label>
+                        <select class="choices form-select @error('id_organisasi') is-invalid @enderror" name="id_organisasi"
+                            id="id_organisasi">
+                            <option value="{{ old('id_organisasi') }}">- Pilih Organisasi -</option>
+                            @foreach ($organisasi as $item)
+                                <option value="{{ $item->id_organisasi }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('id_organisasi'))
+                            <span class="text-danger">{{ $errors->first('id_organisasi') }}</span>
+                        @endif
+                    </div>
 
                     <!-- Kolom Poin Kecerdasan Majemuk -->
                     <div class="col-md-12">
@@ -86,20 +131,7 @@
                         </div>
                     </div>              
                                     
-                    <!-- Kolom Program Studi -->
                     {{-- <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="nama_prodi" class="form-label">Program Studi</label>
-                            <select name="nama_prodi" class="form-control" required>
-                                <option value="">-- Pilih Program Studi --</option>
-                                @foreach($prodi as $p)
-                                    <option value="{{ $p->id_prodi }}">{{ $p->nama_prodi }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> --}}
-
-                    <div class="col-md-12">
                     <div class="form-group">
                         <label for="id_prodi" class="form-label">Program Studi</label>
                         <select class="choices form-select @error('id_prodi') is-invalid @enderror" name="id_prodi"
@@ -113,7 +145,26 @@
                             <span class="text-danger">{{ $errors->first('id_prodi') }}</span>
                         @endif
                     </div>
-                </div>
+                </div> --}}
+
+                <div class="col-md-12">
+    <div class="form-group">
+        <label for="id_prodi" class="form-label">Program Studi</label>
+        <select class="choices form-select @error('id_prodi') is-invalid @enderror" name="id_prodi"
+            id="id_prodi" required>
+            <option value="">- Pilih Program Studi -</option>
+            @foreach ($prodi as $item)
+                <option value="{{ $item->id_prodi }}" {{ old('id_prodi') == $item->id_prodi ? 'selected' : '' }}>
+                    {{ $item->nama_prodi }}
+                </option>
+            @endforeach
+        </select>
+        @if ($errors->has('id_prodi'))
+            <span class="text-danger">{{ $errors->first('id_prodi') }}</span>
+        @endif
+    </div>
+</div>
+
 
                     <!-- Tombol Simpan & Kembali -->
                     <div class="d-flex justify-content-between">

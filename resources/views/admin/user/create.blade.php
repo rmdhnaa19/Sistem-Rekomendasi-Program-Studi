@@ -121,7 +121,7 @@
                             <div class="col">
                                 <div class="row mb-3">
                                     <div class="drop-zone"
-                                        style="width: 300px; height: 300px; border: 2px dashed #ccc; border-radius: 5px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        style="width: 260px; height: 260px; border: 2px dashed #ccc; border-radius: 5px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
                                         <div class="text-center">
                                             <i class="fa-solid fa-cloud-arrow-up"
                                                 style="height: 50px; font-size: 50px"></i>

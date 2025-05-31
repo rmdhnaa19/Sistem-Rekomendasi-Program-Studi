@@ -10,6 +10,9 @@ use App\Models\KecerdasanMajemukModel;
 use App\Models\PertanyaanKecerdasanModel;
 use App\Models\KriteriaModel;
 use App\Models\SubKriteriaModel;
+use App\Models\JurusanAsalModel; 
+use App\Models\PrestasiModel; 
+use App\Models\OrganisasiModel;
 
 class KonsultasiController extends Controller
 {
@@ -19,57 +22,63 @@ class KonsultasiController extends Controller
     $sub_kriteria = SubKriteriaModel::all();
     $pertanyaan_kecerdasan = PertanyaanKecerdasanModel::all();
 
-    // Ambil sub_kriteria berdasarkan id_kriteria tertentu
-    $sub_kriteria_jurusan = SubKriteriaModel::where('id_kriteria', 16)->get(); 
-    $sub_kriteria_prestasi = SubKriteriaModel::where('id_kriteria', 19)->get(); 
-    $sub_kriteria_organisasi = SubKriteriaModel::where('id_kriteria', 20)->get();
+    $jurusan_asal = JurusanAsalModel::all();
+    $prestasi = PrestasiModel::all();
+    $organisasi = OrganisasiModel::all();
 
     return view('pengguna.konsultasi.index', compact(
         'profile', 
         'sub_kriteria', 
         'pertanyaan_kecerdasan',
-        'sub_kriteria_jurusan',
-        'sub_kriteria_prestasi',
-        'sub_kriteria_organisasi'
+        'jurusan_asal',
+        'prestasi',
+        'organisasi'
     ));
 }
 
 
-// public function tes()
-// {
-//     return view('pengguna.konsultasi.tes');
-// }
+    // Fungsi create untuk menampilkan form konsultasi
+    public function create()
+    {
+        // Ambil data jurusan, prestasi, dan organisasi
+        $jurusan_asal = JurusanAsalModel::all();
+        $prestasi = PrestasiModel::all();
+        $organisasi = OrganisasiModel::all();
 
-public function store(Request $request)
-{
-    // Validasi input
-    $validatedData = $request->validate([
-        'nama' => 'required|string',
-        'jurusan_asal' => 'required|exists:sub_kriteria,id_sub_kriteria',
-        'nilai_rata_rata_rapor' => 'required|numeric',
-        'prestasi' => 'required|exists:sub_kriteria,id_sub_kriteria',
-        'organisasi' => 'required|exists:sub_kriteria,id_sub_kriteria',
-    ]);
+        // Tampilkan form dengan data tersebut
+        return view('konsultasi.create', compact('jurusan_asal', 'prestasi', 'organisasi'));
+    }
 
-    // Ambil nama sub_kriteria yang dipilih
-    $jurusanAsal = SubKriteriaModel::where('id_sub_kriteria', $validatedData['jurusan_asal'])->first();
-    $prestasi = SubKriteriaModel::where('id_sub_kriteria', $validatedData['prestasi'])->first();
-    $organisasi = SubKriteriaModel::where('id_sub_kriteria', $validatedData['organisasi'])->first();
+    public function store(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'nama' => 'required|string',
+            'jurusan_asal' => 'required|exists:jurusan_asal,id_jurusan_asal',
+            'nilai_rata_rata_rapor' => 'required|numeric',
+            'prestasi' => 'required|exists:prestasi,id_prestasi',
+            'organisasi' => 'required|exists:organisasi,id_organisasi',
+        ]);
 
-    // Simpan data asli yang dipilih pengguna
-    session([
-        'konsultasi' => [
-            'nama' => $validatedData['nama'],
-            'jurusan_asal' => $jurusanAsal->nama_sub,  
-            'nilai_rata_rata_rapor' => $validatedData['nilai_rata_rata_rapor'],
-            'prestasi' => $prestasi->nama_sub,  
-            'organisasi' => $organisasi->nama_sub,  
-            'jurusan_asal_nilai' => $jurusanAsal->nilai, 
-            'prestasi_nilai' => $prestasi->nilai, 
-            'organisasi_nilai' => $organisasi->nilai,
-        ]
-    ]);
+        // Ambil nama sub_kriteria yang dipilih
+        $jurusanAsal = JurusanAsalModel::where('id_jurusan_asal', $validatedData['jurusan_asal'])->first();
+        $prestasi = PrestasiModel::where('id_prestasi', $validatedData['prestasi'])->first();
+        $organisasi = OrganisasiModel::where('id_organisasi', $validatedData['organisasi'])->first();
 
-    return redirect()->route('pengguna.tes.index')->with('success', 'Silakan lanjut ke tes kecerdasan.');
-}
+        // Simpan data asli yang dipilih pengguna
+        session([ 
+            'konsultasi' => [
+                'nama' => $validatedData['nama'],
+                'jurusan_asal' => $jurusanAsal->nama,
+                'nilai_rata_rata_rapor' => $validatedData['nilai_rata_rata_rapor'],
+                'prestasi' => $prestasi->nama,
+                'organisasi' => $organisasi->nama,
+                'jurusan_asal_nilai' => $jurusanAsal->nilai,
+                'prestasi_nilai' => $prestasi->nilai,
+                'organisasi_nilai' => $organisasi->nilai,
+            ]
+        ]);
+
+        return redirect()->route('pengguna.tes.index')->with('success', 'Silakan lanjut ke tes kecerdasan.');
+    }
 }

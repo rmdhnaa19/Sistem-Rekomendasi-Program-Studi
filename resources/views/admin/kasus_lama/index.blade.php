@@ -88,7 +88,7 @@
                 { data: "kec_intrapersonal"},
                 { data: "kec_naturalis"},
                 { data: "kec_eksistensial"},
-                { data: "prodi.nama_prodi"},
+                { data: "nama_prodi"},
                 { 
                     data: "id_kasus_lama",
                     orderable: false,

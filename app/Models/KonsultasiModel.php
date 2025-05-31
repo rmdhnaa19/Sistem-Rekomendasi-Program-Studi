@@ -18,22 +18,24 @@ class KonsultasiModel extends Model
         'jurusan_asal',
         'nilai_rata_rata_rapor',
         'prestasi',
-        'organisasi'
+        'organisasi',
+        'kec_linguistik',
+        'kec_musikal',
+        'kec_logika_matematis',
+        'kec_spasial',
+        'kec_kinestetik',
+        'kec_interpersonal',
+        'kec_intrapersonal',
+        'kec_naturalis',
+        'kec_eksistensial',
+        'similarity',
+        'kd_kasus_lama',
     ];
 
     // Relasi ke tabel jurusan (opsional, jika ada)
-    public function jurusan()
+    public function kasusLama()
     {
-        return $this->belongsTo(KriteriaModel::class, 'jurusan_asal', 'id_kriteria');
+        return $this->belongsTo(KasusLamaModel::class, 'kd_kasus_lama', 'kd_kasus_lama');
     }
 
-    public function prestasi()
-    {
-        return $this->belongsTo(KriteriaModel::class, 'prestasi', 'id_kriteria');
-    }
-
-    public function organisasi()
-    {
-        return $this->belongsTo(KriteriaModel::class, 'organisasi', 'id_kriteria');
-    }
 }

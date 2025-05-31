@@ -21,7 +21,6 @@
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         max-width: 550px;
         width: 100%;
-        /* margin-bottom: 20px; */
     }
 
     .container-form h2 {
@@ -107,38 +106,43 @@
                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama Anda" value="{{ old('nama') }}" required autofocus>
                     <div class="error-message">Wajib diisi!</div>
                 </div>
+                
                 <div class="form-group">
                     <label for="jurusan_asal">Jurusan Asal</label>
                     <select name="jurusan_asal" class="form-control select2" required>
                         <option value="">-- Pilih Jurusan Asal --</option>
-                        @foreach($sub_kriteria_jurusan as $sub)
-                            <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                        @foreach($jurusan_asal as $jurusan_item)
+                            <option value="{{ $jurusan_item->id_jurusan_asal }}">{{ $jurusan_item->nama }}</option>
                         @endforeach
                     </select>
-                </div>   
+                </div>
+
                 <div class="form-group">
                     <label for="nilai_rata_rata_rapor">Nilai Rata-rata Rapor</label>
                     <input type="number" step="0.01" class="form-control" id="nilai_rata_rata_rapor" name="nilai_rata_rata_rapor" placeholder="Masukkan nilai rata-rata rapor" required>
                     <div class="error-message">Wajib diisi!</div>
                 </div>
+
                 <div class="form-group">
                     <label for="prestasi">Prestasi</label>
                     <select name="prestasi" class="form-control select2" required>
                         <option value="">-- Pilih Prestasi --</option>
-                        @foreach($sub_kriteria_prestasi as $sub)
-                            <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                        @foreach($prestasi as $prestasi_item)
+                            <option value="{{ $prestasi_item->id_prestasi }}">{{ $prestasi_item->nama }}</option>
                         @endforeach
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="organisasi">Organisasi</label>
                     <select name="organisasi" class="form-control select2" required>
                         <option value="">-- Pilih Organisasi --</option>
-                        @foreach($sub_kriteria_organisasi as $sub)
-                            <option value="{{ $sub->id_sub_kriteria }}">{{ $sub->nama_sub }}</option>
+                        @foreach($organisasi as $organisasi_item)
+                            <option value="{{ $organisasi_item->id_organisasi }}">{{ $organisasi_item->nama }}</option>
                         @endforeach
                     </select>
-                </div>      
+                </div>
+
                 <button type="submit" class="btn btn-primary">SELANJUTNYA</button>
             </form>
         </div>

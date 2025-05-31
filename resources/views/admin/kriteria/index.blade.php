@@ -4,15 +4,17 @@
     <div class="card">
         <div class="card-header">Kelola Kriteria</div>
         <div class="card-body">
-            <table class="table" id="table_kriteria">
-                <thead>
-                    <tr>
-                        <th class="text-center">NAMA KRITERIA</th>
-                        <th class="text-center">JENIS KRITERIA</th>
-                        <th style="width: 120px;" class="text-center">AKSI</th> <!-- Lebar kolom dipersempit -->
-                    </tr>
-                </thead>
-            </table>
+            <div class="table-responsive">
+                <table class="table" id="table_kriteria">
+                    <thead>
+                        <tr>
+                            <th class="text-center">NAMA KRITERIA</th>
+                            <th class="text-center">JENIS KRITERIA</th>
+                            <th style="width: 120px;" class="text-center">AKSI</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 @endsection
@@ -22,11 +24,20 @@
     .aksi-buttons {
         display: flex;
         justify-content: center;
-        gap: 5px; /* Jarak antara tombol */
+        gap: 5px;
     }
     .btn-xs {
         padding: 4px 8px;
         font-size: 12px;
+    }
+
+    /* Responsif agar scroll horizontal di mobile */
+    .dataTables_wrapper {
+        overflow-x: auto;
+    }
+
+    table.dataTable {
+        width: 100% !important;
     }
 </style>
 @endpush
@@ -36,14 +47,15 @@
 $(document).ready(function() {
     var datakriteria = $('#table_kriteria').DataTable({
         serverSide: true,
+        responsive: true, // Tambahkan responsif
         ajax: {
-            "url": "{{ url('kriteria/list') }}",
-            "dataType": "json",
-            "type": "POST",
-            "data": function(d) {
+            url: "{{ url('kriteria/list') }}",
+            dataType: "json",
+            type: "POST",
+            data: function(d) {
                 d.id_kriteria = $('#id_kriteria').val();
             },
-            "error": function(xhr, error, thrown) {
+            error: function(xhr, error, thrown) {
                 console.error('Error fetching data: ', thrown);
             }
         },
@@ -71,7 +83,7 @@ $(document).ready(function() {
             }
         ],
         columnDefs: [
-            { width: "120px", targets: 2 } // Mempersempit kolom aksi
+            { width: "120px", targets: 2 }
         ],
         pagingType: "simple_numbers",
         dom: 'frtip',
@@ -112,7 +124,7 @@ $(document).ready(function() {
                                 timer: 2000,
                                 showConfirmButton: true
                             }).then(() => {
-                                datakriteria.ajax.reload(); // Reload tabel setelah hapus
+                                datakriteria.ajax.reload();
                             });
                         } else {
                             Swal.fire({

@@ -88,7 +88,7 @@
                 { data: "kec_intrapersonal"},
                 { data: "kec_naturalis"},
                 { data: "kec_eksistensial"},
-                { data: "prodi.nama_prodi"},
+                { data: "nama_prodi"},
                 // { data: "status"},
                 { 
     data: "id_revise",
@@ -132,50 +132,50 @@
         });
 
         // Event listener untuk tombol Setujui (centang hijau)
-$(document).on('click', '.btn-approve-revise', function() {
-    var reviseId = $(this).data('id');
-    var approveUrl = $(this).data('url');
+        $(document).on('click', '.btn-approve-revise', function() {
+            var reviseId = $(this).data('id');
+            var approveUrl = $(this).data('url');
 
-    Swal.fire({
-        title: 'Setujui Kasus Ini?',
-        text: 'Kasus ini akan dipindahkan ke kasus lama.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, Setujui!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: approveUrl,
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: response.message,
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: true
-                    }).then(() => {
-                        datarevise.ajax.reload();
-                    });
-                },
-                error: function(xhr) {
-                    var errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat menyetujui data.';
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMessage,
-                        icon: 'error'
+            Swal.fire({
+                title: 'Setujui Kasus Ini?',
+                text: 'Kasus ini akan dipindahkan ke kasus lama.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: approveUrl,
+                        type: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: true
+                            }).then(() => {
+                                datarevise.ajax.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            var errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat menyetujui data.';
+                            Swal.fire({
+                                title: 'Error!',
+                                text: errorMessage,
+                                icon: 'error'
+                            });
+                        }
                     });
                 }
             });
-        }
-    });
-});
+        });
 
     
         // Event listener untuk tombol Hapus
@@ -233,7 +233,7 @@ $(document).on('click', '.btn-approve-revise', function() {
         // });
     
         // Placeholder untuk input pencarian
-        $('input[type="search"]').attr('placeholder', 'Cari data kasus baru...');
+        $('input[type="search"]').attr('placeholder', 'Cari data revise...');
     });
     </script>    
 @endpush

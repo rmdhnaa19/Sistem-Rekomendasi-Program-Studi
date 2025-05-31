@@ -9,7 +9,7 @@
                     <x-svg-icon icon="user" /> Total User
                 </h5>
                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
-                    <h1 style="font-size: 90px; font-weight: 900">{{ $totalUser }}</h1>
+                    <h1 style="font-size: 90px; color: #0056b3; font-weight: 900">{{ $totalUser }}</h1>
                 </div>
             </div>
         </div>
@@ -18,10 +18,10 @@
         <div class="card m-0" style="height: 200px;">
             <div class="card-body">
                 <h5 class="card-title m-0">
-                    <x-svg-icon icon="prodi" /> Total Jurusan
+                    <x-svg-icon icon="jurusan" /> Total Jurusan
                 </h5>
                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
-                    <h1 style="font-size: 90px; font-weight: 900">{{ $totalJurusan }}</h1>
+                    <h1 style="font-size: 90px; color: #0056b3; font-weight: 900">{{ $totalJurusan }}</h1>
                 </div>
             </div>
         </div>
@@ -30,10 +30,10 @@
         <div class="card m-0" style="height: 200px;">
             <div class="card-body">
                 <h5 class="card-title m-0">
-                    <x-svg-icon icon="prodi" /> Total Program Studi
+                    <x-svg-icon icon="program_studi" /> Total Program Studi
                 </h5>
                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
-                    <h1 style="font-size: 90px; font-weight: 900">{{ $totalProdi }}</h1>
+                    <h1 style="font-size: 90px; color: #0056b3; font-weight: 900">{{ $totalProdi }}</h1>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <x-svg-icon icon="kriteria" /> Total Kriteria
                 </h5>
                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
-                    <h1 style="font-size: 90px; font-weight: 900">{{ $totalKriteria }}</h1>
+                    <h1 style="font-size: 90px; color: #0056b3; font-weight: 900">{{ $totalKriteria }}</h1>
                 </div>
             </div>
         </div>

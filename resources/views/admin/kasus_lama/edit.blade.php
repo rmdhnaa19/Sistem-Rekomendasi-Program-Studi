@@ -31,16 +31,17 @@
                         </div>                        
                         
                         <div class="mb-3">
-                            <label class="form-label">Jurusan Asal</label>
-                            <select name="jurusan_asal" class="form-control" required>
-                                @foreach($sub_kriteria_jurusan as $jurusan)
-                                    <option value="{{ $jurusan->id_sub_kriteria }}" 
-                                        {{ old('jurusan_asal', $kasus_lama->jurusan_asal) == $jurusan->id_sub_kriteria ? 'selected' : '' }}>
-                                        {{ $jurusan->nama_sub }}
-                                    </option>
-                                @endforeach
-                            </select>                
-                        </div>
+    <label class="form-label">Jurusan Asal</label>
+    <select name="jurusan_asal" class="form-control select2" required>
+        @foreach($jurusan_asal as $jurusan)
+            <option value="{{ $jurusan->nama}}"
+                {{ old('jurusan_asal', $kasus_lama->jurusan_asal) == $jurusan->nama ? 'selected' : '' }}>
+                {{ $jurusan->nama }}
+            </option>
+        @endforeach
+    </select>                
+</div>
+
             
                         <div class="mb-3">
                             <label class="form-label">Nilai Rata-Rata Rapor</label>
@@ -49,28 +50,29 @@
                         </div>
             
                         <div class="mb-3">
-                            <label class="form-label">Prestasi</label>
-                            <select name="prestasi" class="form-control" required>
-                                @foreach($sub_kriteria_prestasi as $prestasi)
-                                    <option value="{{ $prestasi->id_sub_kriteria }}" 
-                                        {{ old('prestasi', $kasus_lama->prestasi) == $prestasi->id_sub_kriteria ? 'selected' : '' }}>
-                                        {{ $prestasi->nama_sub }}
-                                    </option>
-                                @endforeach
-                            </select>                            
-                        </div>
-            
-                        <div class="mb-3">
-                            <label class="form-label">Organisasi</label>
-                            <select name="organisasi" class="form-control" required>
-                                @foreach($sub_kriteria_organisasi as $organisasi)
-                                    <option value="{{ $organisasi->id_sub_kriteria }}" 
-                                        {{ old('organisasi', $kasus_lama->organisasi) == $organisasi->id_sub_kriteria ? 'selected' : '' }}>
-                                        {{ $organisasi->nama_sub }}
-                                    </option>
-                                @endforeach
-                            </select>                            
-                        </div>
+    <label class="form-label">Prestasi</label>
+    <select name="prestasi" class="form-control select2" required>
+        @foreach($prestasi as $p)
+            <option value="{{ $p->nama }}" 
+                {{ old('prestasi', $kasus_lama->prestasi) == $p->nama ? 'selected' : '' }}>
+                {{ $p->nama }}
+            </option>
+        @endforeach
+    </select>                            
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Organisasi</label>
+    <select name="organisasi" class="form-control select2"required>
+        @foreach($organisasi as $o)
+            <option value="{{ $o->nama }}" 
+                {{ old('organisasi', $kasus_lama->organisasi) == $o->nama ? 'selected' : '' }}>
+                {{ $o->nama }}
+            </option>
+        @endforeach
+    </select>                            
+</div>
+
             
                         @foreach(['linguistik', 'musikal', 'logika_matematis', 'spasial', 'kinestetik', 'interpersonal', 'intrapersonal', 'naturalis', 'eksistensial'] as $kecerdasan)
                         <div class="mb-3">
@@ -79,19 +81,20 @@
                                 value="{{ old('kec_'.$kecerdasan, $kasus_lama->{'kec_'.$kecerdasan}) }}" required>
                         </div>
                         @endforeach
+
                         
-                    <div class="mb-3">
-                        <label class="form-label">Program Studi</label>
-                        <select name="id_prodi" class="form-control" required>
-                            @foreach($list_prodi as $prodi)
-                                <option value="{{ $prodi->id_prodi }}" 
-                                    {{ old('id_prodi', $kasus_lama->id_prodi) == $prodi->id_prodi ? 'selected' : '' }}>
-                                    {{ $prodi->nama_prodi }}
-                                </option>
-                            @endforeach
-                        </select>                            
-                    </div>
-                        
+                  <div class="mb-3">
+    <label class="form-label">Program Studi</label>
+    <select name="id_prodi" class="form-control" required>
+    @foreach($list_prodi as $prodi)
+        <option value="{{ $prodi->id_prodi }}" 
+            {{ $prodi->nama_prodi == $kasus_lama->nama_prodi ? 'selected' : '' }}>
+            {{ $prodi->nama_prodi }}
+        </option>
+    @endforeach
+    </select>
+</div>
+
 
                     </div>
                     <div class="d-flex justify-content-between">

@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->string('kd_kasus_lama',50)->unique();
                 $table->string('nama');
                 $table->string('jurusan_asal');
-                $table->float('nilai_rata_rata_rapor');
+                $table->decimal('nilai_rata_rata_rapor', 5, 2);
                 $table->string('prestasi')->nullable();
                 $table->string('organisasi')->nullable();
             
@@ -29,7 +29,8 @@ return new class extends Migration
                 $table->integer('kec_interpersonal')->default(0);
                 $table->integer('kec_intrapersonal')->default(0);
                 $table->integer('kec_naturalis')->default(0);
-                $table->string('prodi');
+                $table->integer('kec_eksistensial')->default(0);
+                $table->string('nama_prodi');
             
                 $table->timestamps();
             });

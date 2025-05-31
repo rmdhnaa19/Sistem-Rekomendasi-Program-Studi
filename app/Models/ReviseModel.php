@@ -29,7 +29,9 @@ class ReviseModel extends Model
         'kec_naturalis',
         'kec_eksistensial',
         'id_prodi',
+        'nama_prodi',
         'status',
+        'similarity',
     ];
 
     public $timestamps = true;

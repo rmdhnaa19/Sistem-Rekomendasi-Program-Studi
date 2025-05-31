@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jurusan_asal', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('kasus_lama', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_prodi')->nullable()->change();
         });
     }
 
@@ -22,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jurusan_asal');
+        //
     }
 };

@@ -29,24 +29,14 @@ class KasusLamaModel extends Model
         'kec_intrapersonal',
         'kec_naturalis',
         'kec_eksistensial',
-        'id_prodi',
+        'nama_prodi',
     ];
+    
 
-    public function jurusan()
-    {
-        return $this->belongsTo(SubKriteriaModel::class, 'jurusan_asal', 'id_sub_kriteria');
-    }
-    
-    public function prestasi()
-    {
-        return $this->belongsTo(SubKriteriaModel::class, 'prestasi', 'id_sub_kriteria');
-    }
-    
-    public function organisasi()
-    {
-        return $this->belongsTo(SubKriteriaModel::class, 'organisasi', 'id_sub_kriteria');
-    }
-    
+    public function normalisasi()
+{
+    return $this->hasOne(NormalisasiModel::class, 'id_kasus_lama');
+}
 
     // Relasi ke Prodi (Pastikan bahwa `nama_prodi` menyimpan `id_prodi`, bukan nama)
     public function prodi()
@@ -54,33 +44,47 @@ class KasusLamaModel extends Model
         return $this->belongsTo(ProdiModel::class, 'id_prodi', 'id_prodi');
     }
 
-    /**
-     * Generate kode otomatis untuk kd_kasus_lama
-     */
-    public static function generateKodeKasus()
+    public function prodi_by_name()
     {
-        $lastKode = self::orderBy('kd_kasus_lama', 'desc')->first();
-
-        if ($lastKode && preg_match('/KL(\d+)/', $lastKode->kd_kasus_lama, $matches)) {
-            $newNumber = (int) $matches[1] + 1;
-        } else {
-            $newNumber = 1;
-        }
-
-        return 'KL' . str_pad($newNumber, 2, '0', STR_PAD_LEFT);
+        return $this->belongsTo(ProdiModel::class, 'nama_prodi', 'nama_prodi');
     }
 
-    /**
-     * Atur kode otomatis sebelum insert jika tidak ada
-     */
-    protected static function boot()
-    {
-        parent::boot();
+    
+public static function generateKodeKasus()
+{
+    // Ambil angka terbesar dari kd_kasus_lama (tanpa prefix 'KL')
+    $maxCode = self::max(\DB::raw("CAST(SUBSTRING(kd_kasus_lama, 3) AS UNSIGNED)"));
+    
+    // Mulai dari 1 jika belum ada data
+    $newNumber = $maxCode ? $maxCode + 1 : 1;
+    
+    return 'KL' . $newNumber;
+}
 
-        static::creating(function ($model) {
-            if (empty($model->kd_kasus_lama)) {
-                $model->kd_kasus_lama = self::generateKodeKasus();
+protected static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($model) {
+        if (empty($model->kd_kasus_lama)) {
+            \DB::beginTransaction();
+            try {
+                $kode = self::generateKodeKasus();
+
+                // Jika ternyata sudah ada (race condition), naikkan lagi sampai unik
+                while (self::where('kd_kasus_lama', $kode)->exists()) {
+                    $numberOnly = (int) substr($kode, 2);
+                    $kode = 'KL' . ($numberOnly + 1);
+                }
+
+                $model->kd_kasus_lama = $kode;
+
+                \DB::commit();
+            } catch (\Exception $e) {
+                \DB::rollBack();
+                throw $e;
             }
-        });
-    }
+        }
+    });
+}
 }

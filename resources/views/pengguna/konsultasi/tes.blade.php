@@ -139,6 +139,7 @@
     <div class="container pt-5">
         <h2 class="text-center">TES KECERDASAN</h2>
         <p class="text-center text-muted">Silakan pilih pernyataan yang sesuai dengan diri Anda.</p>
+        <p class="text-center text-muted"><span id="terjawab">0</span>% telah dijawab</p>
 
         <form action="{{ route('tes.store') }}" method="POST" id="tesForm">
             @csrf
@@ -173,8 +174,29 @@
     </div>
 
     <script>
+    var table;
+    var pertanyaanTotal = {{ isset($pertanyaan_kecerdasan) ? $pertanyaan_kecerdasan->count() : 0 }}
+
+    function terjawab(){
+
+        var total = 0
+        var data = table.$('input');
+        $.each(data,function(i,v){
+            if($(this).val() != ""){
+                ++total
+            }
+        })
+
+        let percent = Math.round(total / pertanyaanTotal * 100)
+        $("#terjawab").text(percent) 
+    }
+
+    $(document).on("click",".btn-choose", function(){
+        terjawab()
+    })
+
     $(document).ready(function() {
-        let table = $('#dataTable').DataTable({
+        table = $('#dataTable').DataTable({
             searching: false,
             lengthChange: false,
             info: false,
@@ -183,7 +205,8 @@
             drawCallback: function(settings) {
                 let api = this.api();
                 let pageInfo = api.page.info();
-                if (pageInfo.page === pageInfo.pages - 1) {
+
+                if (pageInfo.page === (pageInfo.pages - 2) && (pageInfo.pages - 2) > -1) {
                     $('#btn-submit').show();
                     $('.dataTables_paginate').hide(); // Sembunyikan pagination
                     table.page.len(-1).draw();
@@ -191,7 +214,7 @@
                     setTimeout(() => {
                         $('html, body').animate({ scrollTop: $(document).height() }, 'fast');
                     }, 100);
-                } else {
+                } else if(pageInfo.page < (pageInfo.pages - 1) && (pageInfo.pages - 1) > -1) {
                     $('#btn-submit').hide();
                     $('.dataTables_paginate').show(); // Tampilkan pagination lagi
                 }

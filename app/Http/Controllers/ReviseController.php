@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JurusanAsalModel;
+use App\Models\JurusanModel;
 use App\Models\ReviseModel;
 use App\Models\KasusLamaModel;
 use App\Models\KriteriaModel;
+use App\Models\NormalisasiModel;
+use App\Models\OrganisasiModel;
+use App\Models\PrestasiModel;
 use App\Models\SubKriteriaModel;
 use App\Models\ProdiModel;
 use Illuminate\Http\Request;
@@ -48,34 +53,36 @@ class ReviseController extends Controller
         'kec_intrapersonal',
         'kec_naturalis',
         'kec_eksistensial',
-        'id_prodi',
+        // 'id_prodi',
+        'nama_prodi',
         'status', 
         'created_at', 
         'updated_at'
-    )->with('prodi');
+    );
+    // ->with('prodi');
 
-    if ($request->id_prodi) {
-        $revises->where('id_prodi', $request->id_prodi);
-    }
+    // if ($request->id_prodi) {
+    //     $revises->where('id_prodi', $request->id_prodi);
+    // }
 
     return DataTables::of($revises)
         // Ganti kolom asli dengan kolom yang berisi nama_sub
-        ->editColumn('jurusan_asal', function ($row) {
-            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->jurusan_asal)->first();
-            return $subKriteria ? $subKriteria->nama_sub : '-';
-        })
-        ->editColumn('prestasi', function ($row) {
-            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->prestasi)->first();
-            return $subKriteria ? $subKriteria->nama_sub : '-';
-        })
-        ->editColumn('organisasi', function ($row) {
-            $subKriteria = SubKriteriaModel::where('id_sub_kriteria', $row->organisasi)->first();
-            return $subKriteria ? $subKriteria->nama_sub : '-';
-        })
-        ->addColumn('prodi_nama', function ($row) {
-            return $row->prodi ? $row->prodi->nama_prodi : '-';
-        })
-        ->rawColumns(['jurusan_asal', 'prestasi', 'organisasi', 'prodi_nama'])
+        // ->editColumn('jurusan_asal', function ($row) {
+        //     $jurusan_asal = JurusanAsalModel::where('nama', $row->jurusan_asal)->first();
+        //     return $jurusan_asal ? $jurusan_asal->nama : '-';
+        // })
+        // ->editColumn('prestasi', function ($row) {
+        //     $prestasi = PrestasiModel::where('nama', $row->prestasi)->first();
+        //     return $prestasi ? $prestasi->nama : '-';
+        // })
+        // ->editColumn('organisasi', function ($row) {
+        //     $organisasi = OrganisasiModel::where('nama', $row->organisasi)->first();
+        //     return $organisasi ? $organisasi->nama : '-';
+        // })
+        // ->addColumn('prodi_nama', function ($row) {
+        //     return $row->prodi ? $row->prodi->nama_prodi : '-';
+        // })
+        // ->rawColumns(['jurusan_asal', 'prestasi', 'organisasi', 'prodi_nama'])
         ->make(true);
 }  
 
@@ -96,11 +103,13 @@ public function edit($id)
     {
         $revise = ReviseModel::where('id_revise', $id)->first();
         $kriteria = [
-            'jurusan_asal' => SubKriteriaModel::where('id_kriteria', 16)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
-            'Prestasi' => SubKriteriaModel::where('id_kriteria', 19)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
-            'Keaktifan Organisasi' => SubKriteriaModel::where('id_kriteria', 20)->pluck('nama_sub', 'id_sub_kriteria')->toArray(),
+            'jurusan_asal' => JurusanAsalModel::where('id_jurusan_asal', 16)->pluck('nama', 'id_jurusan_asal')->toArray(),
+            'Prestasi' => PrestasiModel::where('id_prestasi', 19)->pluck('nama', 'id_prestasi')->toArray(),
+            'Keaktifan Organisasi' => OrganisasiModel::where('id_organisasi', 20)->pluck('nama', 'id_organisasi')->toArray(),
         ];        
-        $sub_kriteria = SubKriteriaModel::all();
+        $jurusanAsal = JurusanAsalModel::all();
+        $organisasi = OrganisasiModel::all();
+        $prestasi = PrestasiModel::all();
         $list_prodi = ProdiModel::all();
 
         if (!$revise) {
@@ -119,7 +128,7 @@ public function edit($id)
 
         $activeMenu = 'revise';
 
-        return view('admin.revise.edit', compact('revise', 'list_prodi', 'sub_kriteria', 'kriteria', 'breadcrumb', 'activeMenu'));
+        return view('admin.revise.edit', compact('revise', 'list_prodi', 'jurusanAsal','organisasi','prestasi', 'kriteria', 'breadcrumb', 'activeMenu'));
     }
 
 
@@ -143,8 +152,9 @@ public function edit($id)
         'kec_intrapersonal' => 'required|integer|min:0',
         'kec_naturalis' => 'required|integer|min:0',
         'kec_eksistensial' => 'required|integer|min:0',
-        'id_prodi' => 'required|integer',
-        'status' => 'required|string',
+        'nama_prodi' => 'required|string',
+        'similarity' => 'required',
+        // 'status' => 'required|string',
     ]);
 
     // Update data
@@ -189,7 +199,26 @@ public function approve($id)
         'kec_intrapersonal' => $revise->kec_intrapersonal,
         'kec_naturalis' => $revise->kec_naturalis,
         'kec_eksistensial' => $revise->kec_eksistensial,
-        'id_prodi' => $revise->id_prodi,
+        'nama_prodi' => $revise->nama_prodi,
+    ]);
+
+    NormalisasiModel::create([
+        'kd_kasus_lama' => $newKdKasus, // Gunakan kode baru dengan format KL
+        'nama' => $revise->nama,
+        'jurusan_asal' => JurusanAsalModel::where('nama',$revise->jurusan_asal)->first()->nilai,
+        'nilai_rata_rata_rapor' => $revise->nilai_rata_rata_rapor,
+        'prestasi' => PrestasiModel::where('nama',$revise->prestasi)->first()->nilai,
+        'organisasi' => OrganisasiModel::where('nama',$revise->organisasi)->first()->nilai,
+        'kec_linguistik' => $revise->kec_linguistik,
+        'kec_musikal' => $revise->kec_musikal,
+        'kec_logika_matematis' => $revise->kec_logika_matematis,
+        'kec_spasial' => $revise->kec_spasial,
+        'kec_kinestetik' => $revise->kec_kinestetik,
+        'kec_interpersonal' => $revise->kec_interpersonal,
+        'kec_intrapersonal' => $revise->kec_intrapersonal,
+        'kec_naturalis' => $revise->kec_naturalis,
+        'kec_eksistensial' => $revise->kec_eksistensial,
+        'id_prodi' => ProdiModel::where('nama_prodi',$revise->nama_prodi)->first()->id_prodi ,
     ]);
 
     // Hapus dari tabel revise setelah dipindahkan

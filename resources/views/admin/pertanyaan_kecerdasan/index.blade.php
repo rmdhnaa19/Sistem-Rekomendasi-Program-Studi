@@ -41,7 +41,7 @@
                 "dataType": "json",
                 "type": "POST",
                 "data": function(d) {
-                    d.id_pertanyaan_kecerdasan = $('#id_pertanyaan_kecerdasan').val();
+                    d.id_kecerdasan_majemuk = $('#id_kecerdasan_majemuk').val();
                 },
                 "error": function(xhr, error, thrown) {
                     console.error('Error fetching data: ', thrown);

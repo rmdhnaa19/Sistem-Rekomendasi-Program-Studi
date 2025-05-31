@@ -18,7 +18,13 @@ use App\Http\Controllers\KasusBaruController;
 use App\Http\Controllers\ReviseController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\HasilController;
+use App\Http\Controllers\JurusanAsalController;
+use App\Http\Controllers\PrestasiController;
+use App\Http\Controllers\OrganisasiController;
+use App\Http\Controllers\BatasThresholdController;
 use App\Http\Controllers\ProfileKampusController;
+use App\Http\Controllers\RiwayatKonsultasiController;
+use App\Http\Controllers\NormalisasiController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +60,11 @@ Route::group(['prefix' => 'profile'], function(){
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 // ROUTE SUPER ADMIN 
+Route::prefix('riwayat-konsultasi')->group(function() {
+    Route::get('/', [RiwayatKonsultasiController::class, 'index'])->name('admin.riwayat-konsultasi.index');
+    Route::post('/list', [RiwayatKonsultasiController::class, 'list'])->name('admin.riwayat-konsultasi.list');
+});
+
 // kelola user
 Route::prefix('user')->group(function() {
     Route::get('/', [UserController::class, 'index'])->name('admin.user.index');
@@ -102,7 +113,7 @@ Route::prefix('kecerdasan_majemuk')->group(function() {
     Route::delete('/{id}', [KecerdasanMajemukController::class, 'destroy'])->name('admin.kecerdasan_majemuk.destroy');
 });
 
-// kelola kecerdasan majemuk
+// kelola pertanyaan kecerdasan
 Route::prefix('pertanyaan_kecerdasan')->group(function() {
     Route::get('/', [PertanyaanKecerdasanController::class, 'index'])->name('admin.pertanyaan_kecerdasan.index');
     Route::post('/list', [PertanyaanKecerdasanController::class, 'list'])->name('admin.pertanyaan_kecerdasan.list');
@@ -126,6 +137,56 @@ Route::prefix('kriteria')->group(function() {
     Route::delete('/{id}', [KriteriaController::class, 'destroy'])->name('admin.kriteria.destroy');
 });
 
+// kelola kasus lama
+Route::prefix('kasus_lama')->group(function() {
+    Route::get('/', [KasusLamaController::class, 'index'])->name('admin.kasus_lama.index');
+    Route::post('/list', [KasusLamaController::class, 'list'])->name('admin.kasus_lama.list');
+    Route::get('/create', [KasusLamaController::class, 'create'])->name('admin.kasus_lama.create');
+    Route::post('/', [KasusLamaController::class, 'store'])->name('admin.kasus_lama.store');
+    Route::get('/{id}', [KasusLamaController::class, 'show'])->name('admin.kasus_lama.show');
+    Route::get('/{id}/edit', [KasusLamaController::class, 'edit'])->name('admin.kasus_lama.edit');
+    Route::put('/{id}', [KasusLamaController::class, 'update'])->name('admin.kasus_lama.update');
+    Route::delete('/{id}', [KasusLamaController::class, 'destroy'])->name('admin.kasus_lama.destroy');
+});
+
+
+// kelola jurusan asal
+Route::prefix('jurusan_asal')->group(function() {
+    Route::get('/', [JurusanAsalController::class, 'index'])->name('admin.jurusan_asal.index');
+    Route::post('/list', [JurusanAsalController::class, 'list'])->name('admin.jurusan_asal.list');
+    Route::get('/create', [JurusanAsalController::class, 'create'])->name('admin.jurusan_asal.create');
+    Route::post('/', [JurusanAsalController::class, 'store'])->name('admin.jurusan_asal.store');
+    Route::get('/{id}', [JurusanAsalController::class, 'show'])->name('admin.jurusan_asal.show');
+    Route::get('/{id}/edit', [JurusanAsalController::class, 'edit'])->name('admin.jurusan_asal.edit');
+    Route::put('/{id}', [JurusanAsalController::class, 'update'])->name('admin.jurusan_asal.update');
+    Route::delete('/{id}', [JurusanAsalController::class, 'destroy'])->name('admin.jurusan_asal.destroy');
+});
+
+// kelola prestasi
+Route::prefix('prestasi')->group(function() {
+    Route::get('/', [PrestasiController::class, 'index'])->name('admin.prestasi.index');
+    Route::post('/list', [PrestasiController::class, 'list'])->name('admin.prestasi.list');
+    Route::get('/create', [PrestasiController::class, 'create'])->name('admin.prestasi.create');
+    Route::post('/', [PrestasiController::class, 'store'])->name('admin.prestasi.store');
+    Route::get('/{id}', [PrestasiController::class, 'show'])->name('admin.prestasi.show');
+    Route::get('/{id}/edit', [PrestasiController::class, 'edit'])->name('admin.prestasi.edit');
+    Route::put('/{id}', [PrestasiController::class, 'update'])->name('admin.prestasi.update');
+    Route::delete('/{id}', [PrestasiController::class, 'destroy'])->name('admin.prestasi.destroy');
+});
+
+// kelola organisasi
+Route::prefix('organisasi')->group(function() {
+    Route::get('/', [OrganisasiController::class, 'index'])->name('admin.organisasi.index');
+    Route::post('/list', [OrganisasiController::class, 'list'])->name('admin.organisasi.list');
+    Route::get('/create', [OrganisasiController::class, 'create'])->name('admin.organisasi.create');
+    Route::post('/', [OrganisasiController::class, 'store'])->name('admin.organisasi.store');
+    Route::get('/{id}', [OrganisasiController::class, 'show'])->name('admin.organisasi.show');
+    Route::get('/{id}/edit', [OrganisasiController::class, 'edit'])->name('admin.organisasi.edit');
+    Route::put('/{id}', [OrganisasiController::class, 'update'])->name('admin.organisasi.update');
+    Route::delete('/{id}', [OrganisasiController::class, 'destroy'])->name('admin.organisasi.destroy');
+});
+
+
 // kelola sub kriteria
 Route::prefix('sub_kriteria')->group(function() {
     Route::get('/', [SubKriteriaController::class, 'index'])->name('admin.sub_kriteria.index');
@@ -138,17 +199,6 @@ Route::prefix('sub_kriteria')->group(function() {
     Route::delete('/{id}', [SubKriteriaController::class, 'destroy'])->name('admin.sub_kriteria.destroy');
 });
 
-// kelola kasus lama
-Route::prefix('kasus_lama')->group(function() {
-    Route::get('/', [KasusLamaController::class, 'index'])->name('admin.kasus_lama.index');
-    Route::post('/list', [KasusLamaController::class, 'list'])->name('admin.kasus_lama.list');
-    Route::get('/create', [KasusLamaController::class, 'create'])->name('admin.kasus_lama.create');
-    Route::post('/', [KasusLamaController::class, 'store'])->name('admin.kasus_lama.store');
-    Route::get('/{id}', [KasusLamaController::class, 'show'])->name('admin.kasus_lama.show');
-    Route::get('/{id}/edit', [KasusLamaController::class, 'edit'])->name('admin.kasus_lama.edit');
-    Route::put('/{id}', [KasusLamaController::class, 'update'])->name('admin.kasus_lama.update');
-    Route::delete('/{id}', [KasusLamaController::class, 'destroy'])->name('admin.kasus_lama.destroy');
-});
 
 // kelola kasus baru revise
 Route::prefix('revise')->group(function() {
@@ -179,6 +229,18 @@ Route::prefix('pages')->group(function() {
 Route::prefix('profile_kampus')->group(function () {
     Route::get('/edit', [ProfileKampusController::class, 'edit'])->name('profile_kampus.edit');
     Route::post('/update', [ProfileKampusController::class, 'update'])->name('profile_kampus.update');
+});
+
+// kelola batas threshold
+Route::prefix('batas_threshold')->group(function() {
+    Route::get('/edit', [BatasThresholdController::class, 'edit'])->name('batas_threshold.edit');
+    Route::post('/update', [BatasThresholdController::class, 'update'])->name('batas_threshold.update');
+});
+
+// Normalisasi
+Route::prefix('normalisasi')->group(function() {
+    Route::get('/', [NormalisasiController::class, 'index'])->name('admin.normalisasi.index');
+    Route::post('/list', [NormalisasiController::class, 'list'])->name('admin.normalisasi.list');
 });
 
 

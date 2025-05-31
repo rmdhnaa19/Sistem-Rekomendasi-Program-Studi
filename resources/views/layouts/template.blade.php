@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>PRISM | @yield('title')</title>
+    <title>SIREKOM | @yield('title')</title>
     <link rel="stylesheet" href="https://cdn.jsdeliver.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="icon" href="{{ asset('storage/asset_web/logo-poliwangi.png') }}" type="image/png">
+    
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('voler-master/dist/assets/vendors/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.css" />
@@ -24,10 +25,16 @@
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/jurusan.css') }}">     
     <link rel="stylesheet" href="{{ asset('css/prodi.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('css/kriteria.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kecerdasan_majemuk.css') }}"> 
     <link rel="stylesheet" href="{{ asset('css/pertanyaan_kecerdasan.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/kriteria.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jurusan_asal.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/prestasi.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/organisasi.css') }}">
     <link rel="stylesheet" href="{{ asset('css/kasus_lama.css') }}"> 
+    <link rel="stylesheet" href="{{ asset('css/normalisasi.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/revise.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/riwayat_konsultasi.css') }}">
     @stack('css')
 </head>
 
@@ -85,7 +92,7 @@
     <!-- Bootstrap JS (versi yang sesuai) -->
     <script src="{{ asset('javascript/bootstrap.min.js') }}"></script>
     <!-- SweetAlert2 -->
-    <script src="{{ asset('javascript/sweetalert2@11.js') }}"></script>
+    <script src="{{ asset('js/sweetalert2@11.js') }}"></script>
 
 
     <script>

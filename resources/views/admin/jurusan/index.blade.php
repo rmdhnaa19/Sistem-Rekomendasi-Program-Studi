@@ -4,15 +4,17 @@
     <div class="card">
         <div class="card-header">Kelola Jurusan</div>
         <div class="card-body">
-            <table class="table" id="table_jurusan">
-                <thead>
-                    <tr>
-                        <th style="width: 300px;" class="text-center">NAMA JURUSAN</th>
-                        <th class="text-center">DESKRIPSI</th>
-                        <th style="width: 120px;" class="text-center">AKSI</th> <!-- Lebar kolom dipersempit -->
-                    </tr>
-                </thead>
-            </table>
+            <div class="table-responsive"> <!-- Tambahkan wrapper responsif -->
+                <table class="table" id="table_jurusan">
+                    <thead>
+                        <tr>
+                            <th style="width: 300px;" class="text-center">NAMA JURUSAN</th>
+                            <th class="text-center">DESKRIPSI</th>
+                            <th style="width: 120px;" class="text-center">AKSI</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 @endsection
@@ -22,7 +24,7 @@
     .aksi-buttons {
         display: flex;
         justify-content: center;
-        gap: 5px; /* Jarak antara tombol */
+        gap: 5px;
     }
     .btn-xs {
         padding: 4px 8px;
@@ -38,45 +40,45 @@ $(document).ready(function() {
         serverSide: true,
         ajax: {
             "url": "{{ url('jurusan/list') }}",
-            "dataType": "json",
             "type": "POST",
+            "dataType": "json",
             "data": function(d) {
-                d.id_jurusan = $('#id_jurusan').val();
+                d.id_jurusan = $('#id_jurusan').val(); // placeholder, bisa dihapus jika tidak dipakai
             },
             "error": function(xhr, error, thrown) {
-                console.error('Error fetching data: ', thrown);
+                console.error('Error fetching data:', thrown);
             }
         },
         columns: [
-    { data: "nama_jurusan" },
-    { 
-        data: "deskripsi",
-        render: function(data, type, row) {
-            return `<div class="text-justify" style="text-align: justify;">${data}</div>`;
-        }
-    },
-    { 
-        data: "id_jurusan",
-        orderable: false,
-        searchable: false,
-        render: function(data, type, row) {
-            var editUrl = '{{ route('admin.jurusan.edit', ':id') }}'.replace(':id', data);
-            var deleteUrl = '{{ route('admin.jurusan.destroy', ':id') }}'.replace(':id', data);
-            return `
-                <div class="aksi-buttons">
-                    <a href="${editUrl}" class="btn btn-primary btn-xs">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <button class="btn btn-danger btn-xs btn-delete-jurusan" data-id="${data}" data-url="${deleteUrl}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-        }
-    }
-],
+            { data: "nama_jurusan", className: "text-center" },
+            {
+                data: "deskripsi",
+                render: function(data, type, row) {
+                    return `<div class="text-justify" style="text-align: justify;">${data}</div>`;
+                }
+            },
+            {
+                data: "id_jurusan",
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    var editUrl = '{{ route('admin.jurusan.edit', ':id') }}'.replace(':id', data);
+                    var deleteUrl = '{{ route('admin.jurusan.destroy', ':id') }}'.replace(':id', data);
+                    return `
+                        <div class="aksi-buttons">
+                            <a href="${editUrl}" class="btn btn-primary btn-xs">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn btn-danger btn-xs btn-delete-jurusan" data-id="${data}" data-url="${deleteUrl}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        ],
         columnDefs: [
-            { width: "120px", targets: 2 } // Mempersempit kolom aksi
+            { width: "120px", targets: 2 }
         ],
         pagingType: "simple_numbers",
         dom: 'frtip',
@@ -85,7 +87,7 @@ $(document).ready(function() {
         }
     });
 
-    // Event listener untuk tombol Hapus
+    // Event tombol hapus
     $(document).on('click', '.btn-delete-jurusan', function() {
         var jurusanId = $(this).data('id');
         var deleteUrl = $(this).data('url');
@@ -110,44 +112,31 @@ $(document).ready(function() {
                     },
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                                timer: 2000,
-                                showConfirmButton: true
-                            }).then(() => {
-                                datajurusan.ajax.reload(); // Reload tabel setelah hapus
+                            Swal.fire('Berhasil!', response.message, 'success').then(() => {
+                                datajurusan.ajax.reload();
                             });
                         } else {
-                            Swal.fire({
-                                title: 'Gagal!',
-                                text: response.message,
-                                icon: 'error'
-                            });
+                            Swal.fire('Gagal!', response.message, 'error');
                         }
                     },
                     error: function(xhr) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Terjadi kesalahan saat menghapus data.',
-                            icon: 'error'
-                        });
+                        Swal.fire('Error!', 'Terjadi kesalahan saat menghapus data.', 'error');
                     }
                 });
             }
         });
     });
 
-    // Tambahkan tombol "Tambah"
-    $("#table_jurusan_filter").append('<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>');
+    // Tambahkan tombol Tambah
+    $("#table_jurusan_filter").append(
+        '<button id="btn-tambah" class="btn btn-primary ml-2">Tambah</button>'
+    );
 
-    // Event listener untuk tombol "Tambah"
-    $("#btn-tambah").on('click', function() {
+    $('#btn-tambah').on('click', function() {
         window.location.href = "{{ url('jurusan/create') }}";
     });
 
-    // Placeholder untuk input pencarian
+    // Placeholder pencarian
     $('input[type="search"]').attr('placeholder', 'Cari data jurusan...');
 });
 </script>

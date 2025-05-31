@@ -45,8 +45,8 @@
                 "url": "{{ url('prodi/list') }}",
                 "dataType": "json",
                 "type": "POST",
-                "data": function(d) {
-                    d.id_prodi = $('#id_prodi').val();
+                data: function(d) {
+                d.id_jurusan = $('#id_jurusan').val(); // ambil nilai filter jurusan
                 },
                 "error": function(xhr, error, thrown) {
                     console.error('Error fetching data: ', thrown);
